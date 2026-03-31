@@ -2,18 +2,28 @@
 
 **One Keyboard, Every Language.**
 
-195+ languages, one input system. Consonant + Vowel + Select.
+195+ languages, one input system. Just type — like Korean and English.
 
 ## What is this?
 
-OmniType OneBoard is a universal keyboard input system that maps all human languages to a single phoneme-based encoding. Same sound = same key, regardless of language.
+OmniType OneBoard is a universal keyboard input system. Same sound = same key, regardless of language. Type in any language the way you already type in Korean or English.
 
 ## How it works
 
-1. **Press C** — Consonant key (same sound = same key across all languages)
-2. **Press V** — Vowel key (C + V = one syllable)
-3. **Pick** — If multiple characters share the same sound, number key selects. Korean needs no picking.
-4. **Switch** — One hotkey cycles through all languages
+Just type like you normally do.
+
+- In Korean, you type ㄱ + ㅏ = 가. That's it.
+- In English, you type h + i = hi. Same thing.
+- In Japanese, same keys make the same sounds: か, さ, た...
+- **Same sound = same key, any language.**
+
+When multiple characters share the same sound (like Chinese tones), press a number key to pick. Korean and English don't need this step.
+
+### Language switching
+
+- **한/영 key + number** = select language (1=Korean, 2=English, 3=Japanese...)
+- **한/영 key again** (without number) = back to Korean/English
+- Just like the 한/영 toggle you already know, extended to 195+ languages.
 
 ## Features
 
