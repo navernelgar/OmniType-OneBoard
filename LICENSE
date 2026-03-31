@@ -1,0 +1,60 @@
+Copyright (c) 2026 Lee Sujin. All rights reserved.
+
+=====================================
+OmniType OneBoard — Licensing Terms
+=====================================
+
+This repository contains multiple components with different licenses:
+
+
+1. ENGINE (Source Code) — PROPRIETARY
+--------------------------------------
+The OmniType OneBoard engine source code is NOT included in this
+repository and is NOT open source. All rights reserved.
+
+Reverse engineering, decompilation, or disassembly of any compiled
+binaries is strictly prohibited.
+
+
+2. LANGUAGE FILES (.kn) — CC BY-NC 4.0
+----------------------------------------
+The .kn language data files in the langs/ directory are licensed under
+Creative Commons Attribution-NonCommercial 4.0 International.
+
+You are free to:
+  - Share: copy and redistribute in any medium or format
+  - Adapt: remix, transform, and build upon the material
+
+Under the following terms:
+  - Attribution: You must give appropriate credit to Lee Sujin
+  - NonCommercial: You may NOT use for commercial purposes
+
+Full license: https://creativecommons.org/licenses/by-nc/4.0/
+
+
+3. DEMO / PORTFOLIO (docs/) — CC BY-NC 4.0
+--------------------------------------------
+The portfolio page and demo materials are licensed under
+CC BY-NC 4.0 (same as above).
+
+
+4. AUDIO (assets/) — CC BY-NC 4.0
+------------------------------------
+Syntax Symphony and all generated audio files are licensed under
+CC BY-NC 4.0.
+
+These audio files are mathematically synthesized (no sampled
+recordings), and are the original work of the copyright holder.
+
+
+5. COMMERCIAL LICENSING
+-------------------------
+For commercial use, OEM licensing, or enterprise deployment,
+contact the copyright holder:
+
+  GitHub: @navernelgar
+  Project: OmniType OneBoard
+
+
+THE SOFTWARE AND DATA ARE PROVIDED "AS IS", WITHOUT WARRANTY OF
+ANY KIND, EXPRESS OR IMPLIED.
