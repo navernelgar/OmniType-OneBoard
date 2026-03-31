@@ -34,6 +34,13 @@ When multiple characters share the same sound (like Chinese tones), press a numb
 - **Safety limiter** built-in (blocks infrasound/ultrasound/weapon patterns)
 - **Syntax Symphony** — text-to-music synthesis engine
 
+### Accessibility
+
+- **Vibration mode** — haptic feedback for deaf-blind users. Same C/V phoneme pattern mapped to vibration sequences
+- **On/Off toggle** — each feature (sound, vibration, visual keyboard) can be toggled independently
+- **Settings saved** — user preferences stored locally, restored on restart
+- **System tray icon** — minimize to tray, quick toggle via icon click or 한/영+Shift
+
 ## Language Files (.kn)
 
 Pre-mapped binary files in `langs/`:
