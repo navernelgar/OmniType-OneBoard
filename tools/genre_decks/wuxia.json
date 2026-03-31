@@ -1,0 +1,128 @@
+{
+  "genre": "wuxia",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 12,
+  "entries": [
+    {
+      "term": "内功",
+      "ko": "내공",
+      "en": "inner power/qi",
+      "ja": "内功",
+      "zh": "内功",
+      "tags": [
+        "ability"
+      ]
+    },
+    {
+      "term": "轻功",
+      "ko": "경공 (공중 이동)",
+      "en": "lightness skill",
+      "ja": "軽功",
+      "zh": "轻功",
+      "tags": [
+        "ability"
+      ]
+    },
+    {
+      "term": "点穴",
+      "ko": "점혈 (혈도 찌르기)",
+      "en": "pressure point strike",
+      "ja": "点穴",
+      "zh": "点穴",
+      "tags": [
+        "technique"
+      ]
+    },
+    {
+      "term": "掌法",
+      "ko": "장법 (손바닥 무공)",
+      "en": "palm technique",
+      "ja": "掌法",
+      "zh": "掌法",
+      "tags": [
+        "technique"
+      ]
+    },
+    {
+      "term": "剑法",
+      "ko": "검법",
+      "en": "sword technique",
+      "ja": "剣法",
+      "zh": "剑法",
+      "tags": [
+        "technique"
+      ]
+    },
+    {
+      "term": "暗器",
+      "ko": "암기 (숨겨진 무기)",
+      "en": "hidden weapon",
+      "ja": "暗器",
+      "zh": "暗器",
+      "tags": [
+        "weapon"
+      ]
+    },
+    {
+      "term": "江湖",
+      "ko": "강호 (무림 세계)",
+      "en": "jianghu (martial world)",
+      "ja": "江湖",
+      "zh": "江湖",
+      "tags": [
+        "world"
+      ]
+    },
+    {
+      "term": "侠客",
+      "ko": "협객 (무협 영웅)",
+      "en": "xia/hero",
+      "ja": "侠客",
+      "zh": "侠客",
+      "tags": [
+        "character"
+      ]
+    },
+    {
+      "term": "武林盟主",
+      "ko": "무림맹주",
+      "en": "martial alliance leader",
+      "ja": "武林盟主",
+      "zh": "武林盟主",
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "term": "门派",
+      "ko": "문파",
+      "en": "martial sect",
+      "ja": "門派",
+      "zh": "门派",
+      "tags": [
+        "organization"
+      ]
+    },
+    {
+      "term": "真气",
+      "ko": "진기",
+      "en": "true qi",
+      "ja": "真気",
+      "zh": "真气",
+      "tags": [
+        "ability"
+      ]
+    },
+    {
+      "term": "穴道",
+      "ko": "혈도 (경혈)",
+      "en": "acupoint",
+      "ja": "穴道",
+      "zh": "穴道",
+      "tags": [
+        "body"
+      ]
+    }
+  ]
+}

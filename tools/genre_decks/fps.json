@@ -1,0 +1,128 @@
+{
+  "genre": "fps",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 12,
+  "entries": [
+    {
+      "term": "camp",
+      "ko": "캠핑/자리잡기",
+      "en": "camping (holding position)",
+      "ja": "キャンプ",
+      "zh": "蹲点/阴人",
+      "tags": [
+        "tactic"
+      ]
+    },
+    {
+      "term": "nerf",
+      "ko": "하향 패치",
+      "en": "nerf (make weaker)",
+      "ja": "ナーフ（弱体化）",
+      "zh": "削弱",
+      "tags": [
+        "balance"
+      ]
+    },
+    {
+      "term": "buff",
+      "ko": "상향/버프",
+      "en": "buff (make stronger)",
+      "ja": "バフ（強化）",
+      "zh": "加强/Buff",
+      "tags": [
+        "balance"
+      ]
+    },
+    {
+      "term": "clutch",
+      "ko": "클러치 (1vs다수 승리)",
+      "en": "clutch (1vX win)",
+      "ja": "クラッチ",
+      "zh": "残局翻盘",
+      "tags": [
+        "play"
+      ]
+    },
+    {
+      "term": "peek",
+      "ko": "피킹 (코너에서 살짝)",
+      "en": "peeking (quick look)",
+      "ja": "ピーク",
+      "zh": "探头/Peek",
+      "tags": [
+        "tactic"
+      ]
+    },
+    {
+      "term": "wallbang",
+      "ko": "벽관통 사격",
+      "en": "wallbang (shoot through wall)",
+      "ja": "壁抜き",
+      "zh": "穿墙",
+      "tags": [
+        "technique"
+      ]
+    },
+    {
+      "term": "spray",
+      "ko": "난사/스프레이",
+      "en": "spray (continuous fire)",
+      "ja": "スプレー",
+      "zh": "扫射",
+      "tags": [
+        "technique"
+      ]
+    },
+    {
+      "term": "one-tap",
+      "ko": "원탭 (헤드샷 원킬)",
+      "en": "one-tap (headshot kill)",
+      "ja": "ワンタップ",
+      "zh": "一枪头",
+      "tags": [
+        "technique"
+      ]
+    },
+    {
+      "term": "callout",
+      "ko": "위치 보고/콜아웃",
+      "en": "callout (location report)",
+      "ja": "コールアウト",
+      "zh": "报点",
+      "tags": [
+        "comm"
+      ]
+    },
+    {
+      "term": "rotate",
+      "ko": "로테이션 (이동)",
+      "en": "rotate (reposition)",
+      "ja": "ローテ",
+      "zh": "转点",
+      "tags": [
+        "tactic"
+      ]
+    },
+    {
+      "term": "ADS",
+      "ko": "조준 사격",
+      "en": "aim down sight",
+      "ja": "エイム",
+      "zh": "开镜",
+      "tags": [
+        "technique"
+      ]
+    },
+    {
+      "term": "TTK",
+      "ko": "킬 소요 시간",
+      "en": "time to kill",
+      "ja": "キルタイム",
+      "zh": "击杀时间",
+      "tags": [
+        "stat"
+      ]
+    }
+  ]
+}

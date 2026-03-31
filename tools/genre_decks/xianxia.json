@@ -1,0 +1,209 @@
+{
+  "genre": "xianxia",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 20,
+  "entries": [
+    {
+      "term": "炉鼎",
+      "ko": "쌍수 도구 (여성 비하)",
+      "en": "cultivation vessel (derogatory for women)",
+      "ja": "炉鼎（双修道具）",
+      "zh": "双修用的女性",
+      "tags": [
+        "derogatory",
+        "cultivation"
+      ]
+    },
+    {
+      "term": "道侣",
+      "ko": "수련 파트너/배우자",
+      "en": "cultivation partner/spouse",
+      "ja": "道侶（修行パートナー）",
+      "zh": "修仙伴侣",
+      "tags": [
+        "relationship"
+      ]
+    },
+    {
+      "term": "筑基",
+      "ko": "축기 (수련 2단계)",
+      "en": "Foundation Establishment (stage 2)",
+      "ja": "築基（修行第2段階）",
+      "zh": "修炼第二阶段",
+      "tags": [
+        "cultivation_stage"
+      ]
+    },
+    {
+      "term": "金丹",
+      "ko": "금단 (수련 3단계)",
+      "en": "Golden Core (stage 3)",
+      "ja": "金丹（修行第3段階）",
+      "zh": "修炼第三阶段",
+      "tags": [
+        "cultivation_stage"
+      ]
+    },
+    {
+      "term": "元婴",
+      "ko": "원영 (수련 4단계, 분신)",
+      "en": "Nascent Soul (stage 4)",
+      "ja": "元嬰（修行第4段階）",
+      "zh": "修炼第四阶段",
+      "tags": [
+        "cultivation_stage"
+      ]
+    },
+    {
+      "term": "化神",
+      "ko": "화신 (수련 5단계)",
+      "en": "Spirit Severing (stage 5)",
+      "ja": "化神（修行第5段階）",
+      "zh": "修炼第五阶段",
+      "tags": [
+        "cultivation_stage"
+      ]
+    },
+    {
+      "term": "灵石",
+      "ko": "영석 (화폐)",
+      "en": "spirit stone (currency)",
+      "ja": "霊石（通貨）",
+      "zh": "灵石（货币）",
+      "tags": [
+        "currency"
+      ]
+    },
+    {
+      "term": "灵根",
+      "ko": "영근 (수련 재능)",
+      "en": "spiritual root (talent)",
+      "ja": "霊根（才能）",
+      "zh": "灵根（天赋）",
+      "tags": [
+        "talent"
+      ]
+    },
+    {
+      "term": "天劫",
+      "ko": "천겁 (승급 시험)",
+      "en": "heavenly tribulation",
+      "ja": "天劫（昇格試練）",
+      "zh": "天劫（渡劫）",
+      "tags": [
+        "event"
+      ]
+    },
+    {
+      "term": "飞升",
+      "ko": "비승 (선계 승천)",
+      "en": "ascension",
+      "ja": "飛昇（仙界へ）",
+      "zh": "飞升",
+      "tags": [
+        "event"
+      ]
+    },
+    {
+      "term": "双修",
+      "ko": "쌍수 (함께 수련)",
+      "en": "dual cultivation",
+      "ja": "双修（合同修行）",
+      "zh": "双修",
+      "tags": [
+        "cultivation"
+      ]
+    },
+    {
+      "term": "丹药",
+      "ko": "단약 (수련 알약)",
+      "en": "pill/elixir",
+      "ja": "丹薬",
+      "zh": "丹药",
+      "tags": [
+        "item"
+      ]
+    },
+    {
+      "term": "法宝",
+      "ko": "법보 (무기/아이템)",
+      "en": "magical treasure",
+      "ja": "法宝（武器）",
+      "zh": "法宝",
+      "tags": [
+        "item"
+      ]
+    },
+    {
+      "term": "宗门",
+      "ko": "종문 (문파/길드)",
+      "en": "sect/clan",
+      "ja": "宗門（ギルド）",
+      "zh": "宗门",
+      "tags": [
+        "organization"
+      ]
+    },
+    {
+      "term": "掌门",
+      "ko": "장문인 (문파장)",
+      "en": "sect master",
+      "ja": "掌門（門派長）",
+      "zh": "掌门",
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "term": "秘境",
+      "ko": "비경 (던전)",
+      "en": "secret realm (dungeon)",
+      "ja": "秘境（ダンジョン）",
+      "zh": "秘境",
+      "tags": [
+        "location"
+      ]
+    },
+    {
+      "term": "内门弟子",
+      "ko": "내문제자 (정식)",
+      "en": "inner disciple",
+      "ja": "内門弟子",
+      "zh": "内门弟子",
+      "tags": [
+        "rank"
+      ]
+    },
+    {
+      "term": "外门弟子",
+      "ko": "외문제자 (수습)",
+      "en": "outer disciple",
+      "ja": "外門弟子",
+      "zh": "外门弟子",
+      "tags": [
+        "rank"
+      ]
+    },
+    {
+      "term": "渡劫",
+      "ko": "도겁 (천겁 극복)",
+      "en": "tribulation crossing",
+      "ja": "渡劫",
+      "zh": "渡劫",
+      "tags": [
+        "event"
+      ]
+    },
+    {
+      "term": "神识",
+      "ko": "신식 (정신력 탐지)",
+      "en": "divine sense",
+      "ja": "神識",
+      "zh": "神识",
+      "tags": [
+        "ability"
+      ]
+    }
+  ]
+}

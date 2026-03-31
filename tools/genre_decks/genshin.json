@@ -1,0 +1,158 @@
+{
+  "genre": "genshin",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 15,
+  "entries": [
+    {
+      "term": "Vision",
+      "ko": "신의 눈 (원소 증표)",
+      "en": "Vision (elemental grant)",
+      "ja": "神の目",
+      "zh": "神之眼",
+      "tags": [
+        "lore"
+      ]
+    },
+    {
+      "term": "Archon",
+      "ko": "마신 (지역 신)",
+      "en": "Archon (regional god)",
+      "ja": "魔神",
+      "zh": "魔神",
+      "tags": [
+        "lore"
+      ]
+    },
+    {
+      "term": "Resin",
+      "ko": "레진 (체력)",
+      "en": "Resin (stamina system)",
+      "ja": "樹脂",
+      "zh": "树脂（体力）",
+      "tags": [
+        "system"
+      ]
+    },
+    {
+      "term": "Constellation",
+      "ko": "명좌 (캐릭터 강화)",
+      "en": "Constellation (character upgrade)",
+      "ja": "命ノ星座",
+      "zh": "命之座",
+      "tags": [
+        "system"
+      ]
+    },
+    {
+      "term": "Teyvat",
+      "ko": "테이바트 (세계)",
+      "en": "Teyvat (world)",
+      "ja": "テイワット",
+      "zh": "提瓦特",
+      "tags": [
+        "world"
+      ]
+    },
+    {
+      "term": "Primogem",
+      "ko": "원석 (가챠 재화)",
+      "en": "Primogem (gacha currency)",
+      "ja": "原石",
+      "zh": "原石",
+      "tags": [
+        "currency"
+      ]
+    },
+    {
+      "term": "Wish",
+      "ko": "기원 (가챠)",
+      "en": "Wish (gacha pull)",
+      "ja": "祈願",
+      "zh": "祈愿（抽卡）",
+      "tags": [
+        "system"
+      ]
+    },
+    {
+      "term": "Pity",
+      "ko": "천장 (보장 시스템)",
+      "en": "Pity (guarantee system)",
+      "ja": "天井",
+      "zh": "保底",
+      "tags": [
+        "system"
+      ]
+    },
+    {
+      "term": "Mora",
+      "ko": "모라 (골드)",
+      "en": "Mora (gold currency)",
+      "ja": "モラ",
+      "zh": "摩拉",
+      "tags": [
+        "currency"
+      ]
+    },
+    {
+      "term": "Elemental Burst",
+      "ko": "원소 폭발 (궁극기)",
+      "en": "Elemental Burst (ultimate)",
+      "ja": "元素爆発",
+      "zh": "元素爆发",
+      "tags": [
+        "ability"
+      ]
+    },
+    {
+      "term": "Elemental Skill",
+      "ko": "원소 전투 스킬",
+      "en": "Elemental Skill",
+      "ja": "元素スキル",
+      "zh": "元素战技",
+      "tags": [
+        "ability"
+      ]
+    },
+    {
+      "term": "Abyss",
+      "ko": "나선 비경 (엔드 콘텐츠)",
+      "en": "Spiral Abyss (endgame)",
+      "ja": "深境螺旋",
+      "zh": "深境螺旋",
+      "tags": [
+        "content"
+      ]
+    },
+    {
+      "term": "Domains",
+      "ko": "비경 (던전)",
+      "en": "Domain (dungeon)",
+      "ja": "秘境",
+      "zh": "秘境",
+      "tags": [
+        "content"
+      ]
+    },
+    {
+      "term": "Fatui",
+      "ko": "우인단 (적 조직)",
+      "en": "Fatui (antagonist faction)",
+      "ja": "ファデュイ",
+      "zh": "愚人众",
+      "tags": [
+        "faction"
+      ]
+    },
+    {
+      "term": "Traveler",
+      "ko": "여행자 (주인공)",
+      "en": "Traveler (protagonist)",
+      "ja": "旅人",
+      "zh": "旅行者",
+      "tags": [
+        "character"
+      ]
+    }
+  ]
+}

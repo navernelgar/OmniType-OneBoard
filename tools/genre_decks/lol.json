@@ -1,0 +1,108 @@
+{
+  "genre": "lol",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 10,
+  "entries": [
+    {
+      "term": "Summoner",
+      "ko": "소환사",
+      "en": "Summoner",
+      "ja": "サモナー",
+      "zh": "召唤师",
+      "tags": [
+        "lore"
+      ]
+    },
+    {
+      "term": "Rift",
+      "ko": "소환사의 협곡",
+      "en": "Summoner's Rift",
+      "ja": "サモナーズリフト",
+      "zh": "召唤师峡谷",
+      "tags": [
+        "map"
+      ]
+    },
+    {
+      "term": "Baron Nashor",
+      "ko": "바론 내셔",
+      "en": "Baron Nashor",
+      "ja": "バロンナッシャー",
+      "zh": "纳什男爵",
+      "tags": [
+        "objective"
+      ]
+    },
+    {
+      "term": "Drake",
+      "ko": "드래곤/용",
+      "en": "Dragon/Drake",
+      "ja": "ドラゴン",
+      "zh": "小龙",
+      "tags": [
+        "objective"
+      ]
+    },
+    {
+      "term": "Nexus",
+      "ko": "넥서스 (본진)",
+      "en": "Nexus (base)",
+      "ja": "ネクサス",
+      "zh": "水晶（基地）",
+      "tags": [
+        "map"
+      ]
+    },
+    {
+      "term": "Flash",
+      "ko": "점멸",
+      "en": "Flash",
+      "ja": "フラッシュ",
+      "zh": "闪现",
+      "tags": [
+        "spell"
+      ]
+    },
+    {
+      "term": "Ignite",
+      "ko": "점화",
+      "en": "Ignite",
+      "ja": "イグナイト",
+      "zh": "引燃",
+      "tags": [
+        "spell"
+      ]
+    },
+    {
+      "term": "Pentakill",
+      "ko": "펜타킬",
+      "en": "Pentakill",
+      "ja": "ペンタキル",
+      "zh": "五杀",
+      "tags": [
+        "event"
+      ]
+    },
+    {
+      "term": "ADC",
+      "ko": "원딜 (원거리 딜러)",
+      "en": "AD Carry",
+      "ja": "ADC",
+      "zh": "ADC/射手",
+      "tags": [
+        "role"
+      ]
+    },
+    {
+      "term": "Jungler",
+      "ko": "정글러",
+      "en": "Jungler",
+      "ja": "ジャングラー",
+      "zh": "打野",
+      "tags": [
+        "role"
+      ]
+    }
+  ]
+}

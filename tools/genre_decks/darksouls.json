@@ -1,0 +1,98 @@
+{
+  "genre": "darksouls",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 9,
+  "entries": [
+    {
+      "term": "Bonfire",
+      "ko": "모닥불 (세이브 포인트)",
+      "en": "Bonfire (checkpoint)",
+      "ja": "篝火",
+      "zh": "篝火（存档点）",
+      "tags": [
+        "system"
+      ]
+    },
+    {
+      "term": "Estus Flask",
+      "ko": "에스트 플라스크 (회복)",
+      "en": "Estus Flask (healing)",
+      "ja": "エスト瓶",
+      "zh": "原素瓶",
+      "tags": [
+        "item"
+      ]
+    },
+    {
+      "term": "Hollow",
+      "ko": "망자 (언데드 변형)",
+      "en": "Hollow (undead form)",
+      "ja": "亡者",
+      "zh": "活尸",
+      "tags": [
+        "lore"
+      ]
+    },
+    {
+      "term": "Souls",
+      "ko": "소울 (경험치+화폐)",
+      "en": "Souls (XP+currency)",
+      "ja": "ソウル",
+      "zh": "魂（经验+货币）",
+      "tags": [
+        "currency"
+      ]
+    },
+    {
+      "term": "Ember",
+      "ko": "잔불/불씨",
+      "en": "Ember",
+      "ja": "残り火",
+      "zh": "余火",
+      "tags": [
+        "item"
+      ]
+    },
+    {
+      "term": "Invade",
+      "ko": "침입 (PvP)",
+      "en": "Invade (PvP)",
+      "ja": "侵入",
+      "zh": "入侵",
+      "tags": [
+        "pvp"
+      ]
+    },
+    {
+      "term": "Summon",
+      "ko": "소환 (협력)",
+      "en": "Summon (co-op)",
+      "ja": "召喚",
+      "zh": "召唤",
+      "tags": [
+        "coop"
+      ]
+    },
+    {
+      "term": "Git Gud",
+      "ko": "실력을 키워라",
+      "en": "Get Good (skill up)",
+      "ja": "上手くなれ",
+      "zh": "变强吧",
+      "tags": [
+        "meme"
+      ]
+    },
+    {
+      "term": "YOU DIED",
+      "ko": "사망",
+      "en": "YOU DIED",
+      "ja": "YOU DIED",
+      "zh": "YOU DIED",
+      "tags": [
+        "system"
+      ]
+    }
+  ]
+}

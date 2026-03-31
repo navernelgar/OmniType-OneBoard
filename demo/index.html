@@ -1,0 +1,928 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>OmniType OneBoard — Demo</title>
+<style>
+* { margin:0; padding:0; box-sizing:border-box; }
+body { background:#0A0A0F; color:#fff; font-family:'Segoe UI','Malgun Gothic',sans-serif; overflow-x:hidden; }
+
+/* 헤더 */
+.header { text-align:center; padding:30px 20px 10px; }
+.header h1 { font-size:2.2em; letter-spacing:-1px; }
+.header h1 span { color:#F0C040; }
+.header p { color:#888; font-size:0.9em; margin-top:5px; }
+
+/* 상단 5버튼 (화상키보드 스타일) */
+.mode-buttons { display:flex; justify-content:center; gap:12px; padding:15px 20px;
+                background:#111118; border-bottom:1px solid #222; }
+.mode-btn { width:120px; height:50px; border-radius:10px; background:#1A1A28;
+            border:2px solid #333; color:#888; cursor:pointer; font-size:0.85em;
+            font-weight:bold; display:flex; flex-direction:column; align-items:center;
+            justify-content:center; transition:all 0.2s; }
+.mode-btn:hover { border-color:#F0C040; color:#F0C040; transform:translateY(-2px); }
+.mode-btn.active { border-color:#F0C040; color:#F0C040; background:#1A1A2F;
+                   box-shadow:0 0 15px rgba(240,192,64,0.15); }
+.mode-btn .btn-icon { font-size:1.2em; }
+.mode-btn .btn-label { font-size:0.7em; margin-top:2px; }
+
+/* 진동 토글 */
+.vib-toggle { position:fixed; top:15px; left:15px; z-index:200;
+              display:flex; align-items:center; gap:8px; }
+.vib-toggle label { color:#555; font-size:0.75em; cursor:pointer; }
+.vib-switch { width:36px; height:20px; background:#333; border-radius:10px;
+              position:relative; cursor:pointer; transition:background 0.2s; }
+.vib-switch.on { background:#F0C040; }
+.vib-switch::after { content:''; width:16px; height:16px; background:#fff; border-radius:50%;
+                     position:absolute; top:2px; left:2px; transition:left 0.2s; }
+.vib-switch.on::after { left:18px; }
+
+/* 모드 탭 (하위 호환) */
+.tabs { display:none; }
+.tab { padding:10px 20px; border-radius:8px; background:#1A1A28; color:#888; cursor:pointer;
+       font-size:0.9em; border:1px solid #222; transition:all 0.2s; }
+.tab:hover { color:#F0C040; border-color:#F0C040; }
+.tab.active { color:#F0C040; border-color:#F0C040; background:#1A1A2F; }
+
+/* 모드 컨테이너 */
+.mode { display:none; padding:20px; max-width:1000px; margin:0 auto; }
+.mode.active { display:block; }
+
+/* 키보드 */
+.keyboard { display:flex; flex-direction:column; align-items:center; gap:6px; margin:20px 0; }
+.key-row { display:flex; gap:6px; }
+.key { width:65px; height:60px; border-radius:8px; display:flex; flex-direction:column;
+       align-items:center; justify-content:center; cursor:pointer; transition:all 0.15s;
+       border:1px solid #333; user-select:none; }
+.key.consonant { background:#1A1A38; }
+.key.vowel { background:#1A2A1A; }
+.key.func { background:#2A2A2A; }
+.key .main { font-size:1.3em; font-weight:bold; }
+.key .sub { font-size:0.65em; color:#F0C040; margin-top:2px; }
+.key:hover { transform:scale(1.08); border-color:#F0C040; }
+.key.pressed { background:#F0C040 !important; color:#000 !important; transform:scale(0.95); }
+.key.pressed .sub { color:#333 !important; }
+
+/* 입력/출력 */
+.input-area { background:#1A1A28; border-radius:12px; padding:20px; margin:15px 0; }
+.input-area label { color:#F0C040; font-size:0.85em; font-weight:bold; }
+.input-display { font-size:1.8em; min-height:50px; margin-top:8px; word-break:break-all; }
+.output-area { display:grid; grid-template-columns:repeat(auto-fit, minmax(200px,1fr)); gap:10px; margin:15px 0; }
+.output-card { background:#1A1A28; border-radius:10px; padding:15px; border:1px solid #222; }
+.output-card .lang-name { color:#888; font-size:0.75em; margin-bottom:5px; }
+.output-card .lang-text { font-size:1.3em; min-height:30px; }
+
+/* 자막 모드 */
+.subtitle-bar { position:fixed; bottom:0; left:0; right:0; background:rgba(0,0,0,0.9);
+                padding:15px 30px; text-align:center; font-size:1.5em; z-index:100;
+                border-top:2px solid #F0C040; transition:transform 0.3s; }
+.subtitle-bar.hidden { transform:translateY(100%); }
+.subtitle-toggle { position:fixed; bottom:80px; right:20px; z-index:101;
+                   background:#F0C040; color:#000; border:none; padding:10px 18px;
+                   border-radius:8px; cursor:pointer; font-weight:bold; font-size:0.9em; }
+.subtitle-toggle.off { background:#333; color:#888; }
+
+/* 게임 */
+.game-area { text-align:center; }
+.game-prompt { font-size:3em; margin:30px 0 10px; }
+.game-hint { color:#888; font-size:1em; margin-bottom:20px; }
+.game-input { background:#1A1A28; border:2px solid #333; border-radius:10px; color:#fff;
+              font-size:1.8em; padding:15px 25px; text-align:center; width:300px;
+              outline:none; }
+.game-input:focus { border-color:#F0C040; }
+.game-score { color:#F0C040; font-size:1.2em; margin-top:15px; }
+.game-result { font-size:1.5em; margin:15px 0; }
+.game-result.correct { color:#4ECB71; }
+.game-result.wrong { color:#FF4444; }
+
+/* 번역기 */
+.translator-input { width:100%; background:#1A1A28; border:2px solid #333; border-radius:10px;
+                    color:#fff; font-size:1.4em; padding:15px; outline:none; resize:none; height:80px; }
+.translator-input:focus { border-color:#F0C040; }
+
+/* 단축키 안내 */
+.shortcuts { position:fixed; top:10px; right:15px; color:#555; font-size:0.7em; text-align:right; }
+
+/* 게임 오버레이 모드 */
+.game-overlay-container { position:relative; width:100%; max-width:900px; margin:0 auto;
+                          background:#000; border-radius:12px; overflow:hidden; }
+.game-screen { width:100%; height:400px; background:linear-gradient(135deg,#0a1628,#1a0a28);
+               display:flex; flex-direction:column; justify-content:center; align-items:center;
+               position:relative; }
+.game-screen .fake-game { color:#334; font-size:4em; font-weight:bold; opacity:0.3; }
+.game-chat { position:absolute; top:15px; left:15px; }
+.game-chat-msg { background:rgba(0,0,0,0.6); padding:6px 12px; border-radius:6px;
+                 margin-bottom:5px; font-size:0.85em; animation:fadeIn 0.3s; }
+.game-chat-msg .sender { color:#F0C040; font-weight:bold; }
+.game-chat-msg .text { color:#ddd; }
+.game-subtitle-bar { position:absolute; bottom:0; left:0; right:0;
+                     background:rgba(0,0,0,0.75); padding:10px 20px;
+                     border-top:1px solid rgba(240,192,64,0.3); }
+.game-subtitle-bar .sub-line { font-size:0.9em; line-height:1.6; }
+.game-subtitle-bar .sub-line.original { color:#F0C040; }
+.game-subtitle-bar .sub-line.translated { color:#aaa; }
+.game-controls { display:flex; gap:10px; padding:12px; background:#111; border-radius:0 0 12px 12px; }
+.game-controls button { padding:8px 16px; border-radius:6px; border:1px solid #333;
+                        background:#1A1A28; color:#888; cursor:pointer; font-size:0.8em; }
+.game-controls button:hover { color:#F0C040; border-color:#F0C040; }
+.game-controls button.active { color:#F0C040; border-color:#F0C040; }
+.game-controls select { padding:6px 10px; border-radius:6px; border:1px solid #333;
+                        background:#1A1A28; color:#F0C040; font-size:0.8em; }
+@keyframes fadeIn { from{opacity:0;transform:translateY(-5px)} to{opacity:1;transform:translateY(0)} }
+
+/* 반응형 */
+@media (max-width:700px) {
+  .key { width:50px; height:48px; }
+  .key .main { font-size:1em; }
+  .game-prompt { font-size:2em; }
+  .mode-btn { width:60px; height:45px; }
+  .mode-btn .btn-label { display:none; }
+  .game-screen { height:280px; }
+}
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>OmniType <span>OneBoard</span></h1>
+  <p>One Keyboard, Every Language — Interactive Demo</p>
+</div>
+
+<!-- 상단 5버튼 -->
+<div class="mode-buttons">
+  <div class="mode-btn active" data-mode="keyboard">
+    <div class="btn-icon">⌨</div><div class="btn-label">Translate</div>
+  </div>
+  <div class="mode-btn" data-mode="subtitle">
+    <div class="btn-icon">CC</div><div class="btn-label">Subtitle</div>
+  </div>
+  <div class="mode-btn" data-mode="steno">
+    <div class="btn-icon">⚡</div><div class="btn-label">Steno</div>
+  </div>
+  <div class="mode-btn" data-mode="syntax">
+    <div class="btn-icon">♪</div><div class="btn-label">Syntax</div>
+  </div>
+  <div class="mode-btn" data-mode="gameoverlay">
+    <div class="btn-icon">🎮</div><div class="btn-label">Game</div>
+  </div>
+</div>
+
+<!-- 진동 토글 -->
+<div class="vib-toggle">
+  <div class="vib-switch" id="vib-switch" onclick="toggleVibration()"></div>
+  <label onclick="toggleVibration()">Vibration</label>
+</div>
+
+<div class="shortcuts">
+  Tab: switch mode | /: search | ESC: clear | 1-5: mode select
+</div>
+
+<!-- ═══ 키보드 모드 (+ 번역 + 퀴즈) ═══ -->
+<div class="mode active" id="mode-keyboard">
+  <div class="input-area">
+    <label>Current Language: <span id="current-lang">Korean</span> (한/영: switch)</label>
+    <div class="input-display" id="kb-display">_</div>
+  </div>
+
+  <div class="keyboard" id="keyboard-container"></div>
+
+  <div class="output-area" id="kb-output">
+    <div class="output-card"><div class="lang-name">Korean</div><div class="lang-text" id="out-ko"></div></div>
+    <div class="output-card"><div class="lang-name">English</div><div class="lang-text" id="out-en"></div></div>
+    <div class="output-card"><div class="lang-name">日本語</div><div class="lang-text" id="out-ja"></div></div>
+    <div class="output-card"><div class="lang-name">中文</div><div class="lang-text" id="out-zh"></div></div>
+    <div class="output-card"><div class="lang-name">العربية</div><div class="lang-text" id="out-ar"></div></div>
+    <div class="output-card"><div class="lang-name">Русский</div><div class="lang-text" id="out-ru"></div></div>
+  </div>
+</div>
+
+<!-- ═══ 번역기 모드 ═══ -->
+<div class="mode" id="mode-translator">
+  <h2 style="margin-bottom:15px;">Real-time Translation <span style="color:#888;font-size:0.5em;">— 90% lookup, 0ms, offline</span></h2>
+  <textarea class="translator-input" id="tr-input" placeholder="Type anything..."></textarea>
+  <div class="output-area" id="tr-output" style="margin-top:15px;">
+    <div class="output-card"><div class="lang-name">Korean</div><div class="lang-text" id="tr-ko"></div></div>
+    <div class="output-card"><div class="lang-name">English</div><div class="lang-text" id="tr-en"></div></div>
+    <div class="output-card"><div class="lang-name">日本語</div><div class="lang-text" id="tr-ja"></div></div>
+    <div class="output-card"><div class="lang-name">中文</div><div class="lang-text" id="tr-zh"></div></div>
+    <div class="output-card"><div class="lang-name">العربية</div><div class="lang-text" id="tr-ar"></div></div>
+    <div class="output-card"><div class="lang-name">Русский</div><div class="lang-text" id="tr-ru"></div></div>
+  </div>
+</div>
+
+<!-- ═══ 게임 모드 ═══ -->
+<div class="mode" id="mode-game">
+  <div class="game-area">
+    <h2>Level 1: Same Sound Match</h2>
+    <p style="color:#888;margin:10px 0;">Type the matching character. Same sound = same key.</p>
+    <div class="game-prompt" id="game-prompt">か</div>
+    <div class="game-hint" id="game-hint">What Korean character sounds like this?</div>
+    <input class="game-input" id="game-input" placeholder="Type..." maxlength="3" autofocus>
+    <div class="game-result" id="game-result"></div>
+    <div class="game-score">Score: <span id="game-score">0</span> | Streak: <span id="game-streak">0</span></div>
+  </div>
+</div>
+
+<!-- ═══ 자막 모드 ═══ -->
+<div class="mode" id="mode-subtitle">
+  <h2 style="margin-bottom:15px;">Subtitle Mode</h2>
+  <p style="color:#888;margin-bottom:15px;">Type and see real-time subtitles in multiple languages at the bottom of the screen.</p>
+  <textarea class="translator-input" id="sub-input" placeholder="Type here — subtitles appear below..."></textarea>
+  <div style="margin-top:15px;color:#888;font-size:0.9em;">
+    <p>Subtitle languages: Korean + English + 日本語 + 中文</p>
+    <p style="margin-top:8px;">Use the toggle button (bottom-right) to show/hide subtitles.</p>
+  </div>
+</div>
+
+<!-- ═══ 속기 모드 ═══ -->
+<div class="mode" id="mode-steno">
+  <h2 style="margin-bottom:15px;">Stenography Mode <span style="color:#888;font-size:0.5em;">— Court Reporter Speed</span></h2>
+  <p style="color:#888;margin-bottom:15px;">Type words → see candidate translations → press number to select.</p>
+
+  <div class="input-area">
+    <label>Input (type Korean or English)</label>
+    <input class="translator-input" id="steno-input" placeholder="Type a word..." style="height:50px;font-size:1.2em;">
+  </div>
+
+  <div style="margin:15px 0;">
+    <div class="input-area">
+      <label style="color:#F0C040;">Candidates (press 1-6 to select)</label>
+      <div id="steno-candidates" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;"></div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <label>Transcript</label>
+    <div id="steno-transcript" style="font-size:1.2em;min-height:60px;margin-top:8px;line-height:1.8;"></div>
+  </div>
+
+  <div style="color:#555;font-size:0.8em;margin-top:10px;">
+    Speed: <span id="steno-wpm">0</span> WPM | Words: <span id="steno-count">0</span>
+  </div>
+</div>
+
+<!-- ═══ 신텍스 심포니 모드 ═══ -->
+<div class="mode" id="mode-syntax">
+  <h2 style="margin-bottom:15px;">Syntax Symphony <span style="color:#888;font-size:0.5em;">♪ Text → Music</span></h2>
+  <p style="color:#888;margin-bottom:15px;">Type text and hear it as music. Each phoneme has a frequency based on mouth position.</p>
+
+  <div class="input-area">
+    <label>Type to play</label>
+    <input class="translator-input" id="syntax-input" placeholder="Type Korean or English..." style="height:50px;font-size:1.2em;">
+  </div>
+
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0;">
+    <div class="output-card">
+      <div class="lang-name">Labial (lips) — 220Hz</div>
+      <div style="color:#F0C040;font-size:1.5em;" id="syn-labial">ㅁ ㅂ ㅍ m b p</div>
+    </div>
+    <div class="output-card">
+      <div class="lang-name">Coronal (tongue) — 330Hz</div>
+      <div style="color:#80C0FF;font-size:1.5em;" id="syn-coronal">ㄴ ㄷ ㅌ ㄹ n d t r</div>
+    </div>
+    <div class="output-card">
+      <div class="lang-name">Velar (throat) — 294Hz</div>
+      <div style="color:#FF8080;font-size:1.5em;" id="syn-velar">ㄱ ㅋ g k</div>
+    </div>
+  </div>
+
+  <div class="input-area">
+    <label>♪ Playing</label>
+    <div id="syntax-visual" style="font-size:1.5em;min-height:40px;margin-top:8px;letter-spacing:3px;"></div>
+  </div>
+
+  <div style="display:flex;gap:10px;margin-top:15px;">
+    <button onclick="playSyntaxDemo()" style="padding:10px 20px;border-radius:8px;border:1px solid #F0C040;background:#1A1A28;color:#F0C040;cursor:pointer;font-size:0.9em;">▶ Play "안녕하세요"</button>
+    <button onclick="playSyntaxDemo('hello')" style="padding:10px 20px;border-radius:8px;border:1px solid #80C0FF;background:#1A1A28;color:#80C0FF;cursor:pointer;font-size:0.9em;">▶ Play "hello"</button>
+    <button onclick="stopSyntax()" style="padding:10px 20px;border-radius:8px;border:1px solid #888;background:#1A1A28;color:#888;cursor:pointer;font-size:0.9em;">■ Stop</button>
+  </div>
+</div>
+
+<!-- ═══ 게임 오버레이 모드 ═══ -->
+<div class="mode" id="mode-gameoverlay">
+  <h2 style="margin-bottom:15px;">Game Overlay <span style="color:#888;font-size:0.5em;">— Non-intrusive subtitle translation</span></h2>
+
+  <div class="game-overlay-container">
+    <div class="game-screen">
+      <div class="fake-game">GAME SCREEN</div>
+
+      <!-- 인게임 채팅 (시뮬레이션) -->
+      <div class="game-chat" id="game-chat"></div>
+
+      <!-- 하단 자막 바 (반투명 오버레이) -->
+      <div class="game-subtitle-bar" id="game-sub-bar">
+        <div class="sub-line original" id="gsub-original">Waiting for game text...</div>
+        <div class="sub-line translated" id="gsub-en"></div>
+        <div class="sub-line translated" id="gsub-ja"></div>
+      </div>
+    </div>
+
+    <!-- 컨트롤 -->
+    <div class="game-controls">
+      <button class="active" onclick="startGameSim()">▶ Simulate Chat</button>
+      <button onclick="stopGameSim()">■ Stop</button>
+      <select id="game-lang-select">
+        <option value="en">Translate → English</option>
+        <option value="ja">Translate → 日本語</option>
+        <option value="zh">Translate → 中文</option>
+        <option value="all">All Languages</option>
+      </select>
+      <button onclick="toggleGameSubPos()">↕ Position</button>
+    </div>
+  </div>
+
+  <div style="color:#888;font-size:0.85em;margin-top:15px;">
+    <p>• Mouse/keyboard pass-through — subtitles don't block game input</p>
+    <p>• Voice + text translated simultaneously</p>
+    <p>• 0ms lookup, no server, works offline</p>
+  </div>
+</div>
+
+<button class="subtitle-toggle off" id="sub-toggle" onclick="toggleSubtitle()">CC OFF</button>
+<div class="subtitle-bar hidden" id="subtitle-bar">
+  <span id="sub-text">Subtitles will appear here...</span>
+</div>
+
+<script>
+// ═══ 음소 매핑 데이터 ═══
+const PHONEME_MAP = {
+  // 키: {ko, en, ja, zh, ar, ru}
+  'ㄱ': {ko:'ㄱ',en:'g',ja:'か',zh:'g',ar:'ك',ru:'г'},
+  'ㄴ': {ko:'ㄴ',en:'n',ja:'な',zh:'n',ar:'ن',ru:'н'},
+  'ㄷ': {ko:'ㄷ',en:'d',ja:'た',zh:'d',ar:'د',ru:'д'},
+  'ㄹ': {ko:'ㄹ',en:'r',ja:'ら',zh:'r',ar:'ر',ru:'р'},
+  'ㅁ': {ko:'ㅁ',en:'m',ja:'ま',zh:'m',ar:'م',ru:'м'},
+  'ㅂ': {ko:'ㅂ',en:'b',ja:'ば',zh:'b',ar:'ب',ru:'б'},
+  'ㅅ': {ko:'ㅅ',en:'s',ja:'さ',zh:'s',ar:'س',ru:'с'},
+  'ㅇ': {ko:'ㅇ',en:'ng',ja:'ん',zh:'ng',ar:'ع',ru:'н'},
+  'ㅈ': {ko:'ㅈ',en:'j',ja:'じ',zh:'j',ar:'ج',ru:'ж'},
+  'ㅊ': {ko:'ㅊ',en:'ch',ja:'ち',zh:'ch',ar:'ش',ru:'ч'},
+  'ㅋ': {ko:'ㅋ',en:'k',ja:'き',zh:'k',ar:'ق',ru:'к'},
+  'ㅌ': {ko:'ㅌ',en:'t',ja:'つ',zh:'t',ar:'ت',ru:'т'},
+  'ㅍ': {ko:'ㅍ',en:'p',ja:'ぱ',zh:'p',ar:'ف',ru:'п'},
+  'ㅎ': {ko:'ㅎ',en:'h',ja:'は',zh:'h',ar:'ه',ru:'х'},
+  'ㅏ': {ko:'ㅏ',en:'a',ja:'あ',zh:'a',ar:'َ',ru:'а'},
+  'ㅓ': {ko:'ㅓ',en:'eo',ja:'え',zh:'e',ar:'ِ',ru:'э'},
+  'ㅗ': {ko:'ㅗ',en:'o',ja:'お',zh:'o',ar:'ُ',ru:'о'},
+  'ㅜ': {ko:'ㅜ',en:'u',ja:'う',zh:'u',ar:'ُ',ru:'у'},
+  'ㅡ': {ko:'ㅡ',en:'eu',ja:'う',zh:'ü',ar:'ا',ru:'ы'},
+  'ㅣ': {ko:'ㅣ',en:'i',ja:'い',zh:'i',ar:'ِ',ru:'и'},
+  'ㅐ': {ko:'ㅐ',en:'ae',ja:'え',zh:'ai',ar:'َ',ru:'э'},
+  'ㅔ': {ko:'ㅔ',en:'e',ja:'え',zh:'ei',ar:'ِ',ru:'е'},
+  'ㅑ': {ko:'ㅑ',en:'ya',ja:'や',zh:'ya',ar:'يَ',ru:'я'},
+  'ㅕ': {ko:'ㅕ',en:'yeo',ja:'よ',zh:'ye',ar:'يِ',ru:'ё'},
+  'ㅛ': {ko:'ㅛ',en:'yo',ja:'よ',zh:'yo',ar:'يُ',ru:'ё'},
+  'ㅠ': {ko:'ㅠ',en:'yu',ja:'ゆ',zh:'yu',ar:'يُ',ru:'ю'},
+};
+
+// 단어 사전 (데모용 기본 단어)
+const WORD_DICT = {
+  '안녕': {en:'hello',ja:'こんにちは',zh:'你好',ar:'مرحبا',ru:'привет'},
+  '감사': {en:'thanks',ja:'ありがとう',zh:'谢谢',ar:'شكرا',ru:'спасибо'},
+  '사랑': {en:'love',ja:'愛',zh:'爱',ar:'حب',ru:'любовь'},
+  '물': {en:'water',ja:'水',zh:'水',ar:'ماء',ru:'вода'},
+  '불': {en:'fire',ja:'火',zh:'火',ar:'نار',ru:'огонь'},
+  '하늘': {en:'sky',ja:'空',zh:'天',ar:'سماء',ru:'небо'},
+  '고양이': {en:'cat',ja:'猫',zh:'猫',ar:'قط',ru:'кот'},
+  '개': {en:'dog',ja:'犬',zh:'狗',ar:'كلب',ru:'собака'},
+  '집': {en:'house',ja:'家',zh:'家',ar:'بيت',ru:'дом'},
+  '밥': {en:'rice',ja:'ご飯',zh:'饭',ar:'أرز',ru:'рис'},
+  '커피': {en:'coffee',ja:'コーヒー',zh:'咖啡',ar:'قهوة',ru:'кофе'},
+  '택시': {en:'taxi',ja:'タクシー',zh:'出租车',ar:'تاكسي',ru:'такси'},
+  '버스': {en:'bus',ja:'バス',zh:'公交车',ar:'حافلة',ru:'автобус'},
+  '학교': {en:'school',ja:'学校',zh:'学校',ar:'مدرسة',ru:'школа'},
+  '병원': {en:'hospital',ja:'病院',zh:'医院',ar:'مستشفى',ru:'больница'},
+  '오늘': {en:'today',ja:'今日',zh:'今天',ar:'اليوم',ru:'сегодня'},
+  '내일': {en:'tomorrow',ja:'明日',zh:'明天',ar:'غدا',ru:'завтра'},
+  '좋다': {en:'good',ja:'良い',zh:'好',ar:'جيد',ru:'хорошо'},
+  '나쁘다': {en:'bad',ja:'悪い',zh:'坏',ar:'سيئ',ru:'плохо'},
+  'hello': {ko:'안녕',ja:'こんにちは',zh:'你好',ar:'مرحبا',ru:'привет'},
+  'thank': {ko:'감사',ja:'ありがとう',zh:'谢谢',ar:'شكرا',ru:'спасибо'},
+  'love': {ko:'사랑',ja:'愛',zh:'爱',ar:'حب',ru:'любовь'},
+  'water': {ko:'물',ja:'水',zh:'水',ar:'ماء',ru:'вода'},
+  'fire': {ko:'불',ja:'火',zh:'火',ar:'نار',ru:'огонь'},
+  'cat': {ko:'고양이',ja:'猫',zh:'猫',ar:'قط',ru:'кот'},
+  'dog': {ko:'개',ja:'犬',zh:'狗',ar:'كلب',ru:'собака'},
+  'good': {ko:'좋다',ja:'良い',zh:'好',ar:'جيد',ru:'хорошо'},
+  'today': {ko:'오늘',ja:'今日',zh:'今天',ar:'اليوم',ru:'сегодня'},
+  'coffee': {ko:'커피',ja:'コーヒー',zh:'咖啡',ar:'قهوة',ru:'кофе'},
+};
+
+// ═══ 키보드 생성 ═══
+const KB_ROWS = [
+  [{m:'ㅂ',s:'b',c:true},{m:'ㅈ',s:'j',c:true},{m:'ㄷ',s:'d',c:true},{m:'ㄱ',s:'g',c:true},{m:'ㅅ',s:'s',c:true},
+   {m:'ㅛ',s:'yo',c:false},{m:'ㅕ',s:'yeo',c:false},{m:'ㅑ',s:'ya',c:false},{m:'ㅐ',s:'ae',c:false},{m:'ㅔ',s:'e',c:false}],
+  [{m:'ㅁ',s:'m',c:true},{m:'ㄴ',s:'n',c:true},{m:'ㅇ',s:'ng',c:true},{m:'ㄹ',s:'r',c:true},{m:'ㅎ',s:'h',c:true},
+   {m:'ㅗ',s:'o',c:false},{m:'ㅓ',s:'eo',c:false},{m:'ㅏ',s:'a',c:false},{m:'ㅣ',s:'i',c:false}],
+  [{m:'ㅋ',s:'k',c:true},{m:'ㅌ',s:'t',c:true},{m:'ㅊ',s:'ch',c:true},{m:'ㅍ',s:'p',c:true},
+   {m:'ㅠ',s:'yu',c:false},{m:'ㅜ',s:'u',c:false},{m:'ㅡ',s:'eu',c:false}],
+];
+
+function buildKeyboard() {
+  const container = document.getElementById('keyboard-container');
+  KB_ROWS.forEach(row => {
+    const rowDiv = document.createElement('div');
+    rowDiv.className = 'key-row';
+    row.forEach(k => {
+      const key = document.createElement('div');
+      key.className = `key ${k.c ? 'consonant' : 'vowel'}`;
+      key.innerHTML = `<div class="main">${k.m}</div><div class="sub">${k.s}</div>`;
+      key.dataset.phoneme = k.m;
+      key.addEventListener('click', () => pressKey(k.m));
+      key.addEventListener('mousedown', () => key.classList.add('pressed'));
+      key.addEventListener('mouseup', () => setTimeout(() => key.classList.remove('pressed'), 100));
+      rowDiv.appendChild(key);
+    });
+    container.appendChild(rowDiv);
+  });
+}
+
+// ═══ 키보드 입력 ═══
+let inputBuffer = [];
+const display = () => document.getElementById('kb-display');
+
+function pressKey(phoneme) {
+  inputBuffer.push(phoneme);
+  display().textContent = inputBuffer.join('');
+  updateOutputs(inputBuffer);
+}
+
+function updateOutputs(buffer) {
+  const text = buffer.join('');
+  const langs = ['ko','en','ja','zh','ar','ru'];
+
+  langs.forEach(lang => {
+    const el = document.getElementById(`out-${lang}`);
+    if (!el) return;
+
+    // 음소별 변환
+    const converted = buffer.map(p => {
+      const map = PHONEME_MAP[p];
+      return map ? map[lang] : p;
+    }).join('');
+
+    el.textContent = converted;
+  });
+}
+
+// ═══ 번역기 ═══
+function setupTranslator() {
+  const input = document.getElementById('tr-input');
+  if (!input) return;
+
+  input.addEventListener('input', () => {
+    const text = input.value.trim();
+    const words = text.split(/\s+/);
+    const langs = {ko:'',en:'',ja:'',zh:'',ar:'',ru:''};
+
+    words.forEach(word => {
+      const dict = WORD_DICT[word];
+      if (dict) {
+        Object.keys(langs).forEach(lang => {
+          if (dict[lang]) langs[lang] += dict[lang] + ' ';
+          else langs[lang] += word + ' ';
+        });
+      } else {
+        // 음역: 한글→각 언어 음소 변환
+        const chars = [...word];
+        Object.keys(langs).forEach(lang => {
+          const converted = chars.map(c => {
+            const map = PHONEME_MAP[c];
+            return map ? map[lang] : c;
+          }).join('');
+          langs[lang] += converted + ' ';
+        });
+      }
+    });
+
+    Object.keys(langs).forEach(lang => {
+      const el = document.getElementById(`tr-${lang}`);
+      if (el) el.textContent = langs[lang].trim() || '...';
+    });
+  });
+}
+
+// ═══ 게임 ═══
+const GAME_PAIRS = [
+  {prompt:'か',hint:'Japanese "ka" → Korean?',answer:'가',display:'ka → ?'},
+  {prompt:'さ',hint:'Japanese "sa" → Korean?',answer:'사',display:'sa → ?'},
+  {prompt:'た',hint:'Japanese "ta" → Korean?',answer:'다',display:'ta → ?'},
+  {prompt:'な',hint:'Japanese "na" → Korean?',answer:'나',display:'na → ?'},
+  {prompt:'は',hint:'Japanese "ha" → Korean?',answer:'하',display:'ha → ?'},
+  {prompt:'ま',hint:'Japanese "ma" → Korean?',answer:'마',display:'ma → ?'},
+  {prompt:'cat',hint:'English → Korean?',answer:'고양이',display:'cat → ?'},
+  {prompt:'水',hint:'Chinese "water" → Korean?',answer:'물',display:'shuǐ → ?'},
+  {prompt:'火',hint:'Chinese "fire" → Korean?',answer:'불',display:'huǒ → ?'},
+  {prompt:'hello',hint:'English → Korean?',answer:'안녕',display:'hello → ?'},
+  {prompt:'愛',hint:'Japanese "love" → Korean?',answer:'사랑',display:'ai → ?'},
+  {prompt:'привет',hint:'Russian "hello" → Korean?',answer:'안녕',display:'privet → ?'},
+];
+
+let gameScore = 0, gameStreak = 0, currentQ = 0;
+
+function nextQuestion() {
+  currentQ = Math.floor(Math.random() * GAME_PAIRS.length);
+  const q = GAME_PAIRS[currentQ];
+  document.getElementById('game-prompt').textContent = q.prompt;
+  document.getElementById('game-hint').textContent = q.hint;
+  document.getElementById('game-input').value = '';
+  document.getElementById('game-result').textContent = '';
+  document.getElementById('game-input').focus();
+}
+
+function setupGame() {
+  const input = document.getElementById('game-input');
+  if (!input) return;
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') {
+      const q = GAME_PAIRS[currentQ];
+      const answer = input.value.trim();
+      const result = document.getElementById('game-result');
+
+      if (answer === q.answer) {
+        gameScore += 10 * (gameStreak + 1);
+        gameStreak++;
+        result.textContent = `Correct! ${q.prompt} = ${q.answer}`;
+        result.className = 'game-result correct';
+      } else {
+        gameStreak = 0;
+        result.textContent = `Wrong! Answer: ${q.answer}`;
+        result.className = 'game-result wrong';
+      }
+
+      document.getElementById('game-score').textContent = gameScore;
+      document.getElementById('game-streak').textContent = gameStreak;
+
+      setTimeout(nextQuestion, 1200);
+    }
+  });
+
+  nextQuestion();
+}
+
+// ═══ 자막 모드 ═══
+let subtitleOn = false;
+
+function toggleSubtitle() {
+  subtitleOn = !subtitleOn;
+  const bar = document.getElementById('subtitle-bar');
+  const btn = document.getElementById('sub-toggle');
+
+  if (subtitleOn) {
+    bar.classList.remove('hidden');
+    btn.textContent = 'CC ON';
+    btn.classList.remove('off');
+  } else {
+    bar.classList.add('hidden');
+    btn.textContent = 'CC OFF';
+    btn.classList.add('off');
+  }
+}
+
+function setupSubtitle() {
+  const input = document.getElementById('sub-input');
+  if (!input) return;
+
+  input.addEventListener('input', () => {
+    if (!subtitleOn) return;
+    const text = input.value.trim();
+    if (!text) {
+      document.getElementById('sub-text').textContent = 'Subtitles will appear here...';
+      return;
+    }
+
+    // 단어별 번역 시도
+    const words = text.split(/\s+/);
+    const lines = [];
+
+    // 한국어 원문
+    lines.push(text);
+
+    // 영어 변환
+    const enWords = words.map(w => WORD_DICT[w]?.en || w).join(' ');
+    lines.push(enWords);
+
+    // 일본어 변환
+    const jaWords = words.map(w => WORD_DICT[w]?.ja || w).join(' ');
+    if (jaWords !== enWords) lines.push(jaWords);
+
+    document.getElementById('sub-text').innerHTML = lines.join('<br>');
+  });
+}
+
+// ═══ 5버튼 모드 전환 ═══
+function setupModeButtons() {
+  document.querySelectorAll('.mode-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.mode-btn').forEach(b => b.classList.remove('active'));
+      document.querySelectorAll('.mode').forEach(m => m.classList.remove('active'));
+      btn.classList.add('active');
+      const modeId = `mode-${btn.dataset.mode}`;
+      const modeEl = document.getElementById(modeId);
+      if (modeEl) modeEl.classList.add('active');
+    });
+  });
+}
+
+// ═══ 진동 토글 ═══
+let vibrationOn = false;
+function toggleVibration() {
+  vibrationOn = !vibrationOn;
+  const sw = document.getElementById('vib-switch');
+  sw.classList.toggle('on', vibrationOn);
+  // 실제 진동 API (모바일)
+  if (vibrationOn && navigator.vibrate) navigator.vibrate(200);
+}
+
+// ═══ 키보드 단축키 ═══
+document.addEventListener('keydown', (e) => {
+  if (e.key === 'Escape') {
+    inputBuffer = [];
+    if (display()) display().textContent = '_';
+    ['ko','en','ja','zh','ar','ru'].forEach(l => {
+      const el = document.getElementById(`out-${l}`);
+      if (el) el.textContent = '';
+    });
+  }
+
+  // 숫자 1-5 = 모드 선택 (input/textarea 밖에서만)
+  if (!e.target.matches('input,textarea') && e.key >= '1' && e.key <= '5') {
+    const btns = [...document.querySelectorAll('.mode-btn')];
+    const idx = parseInt(e.key) - 1;
+    if (btns[idx]) btns[idx].click();
+  }
+
+  // Tab = 모드 순환
+  if (e.key === 'Tab' && !e.target.matches('input,textarea')) {
+    e.preventDefault();
+    const btns = [...document.querySelectorAll('.mode-btn')];
+    const active = btns.findIndex(b => b.classList.contains('active'));
+    const next = (active + 1) % btns.length;
+    btns[next].click();
+  }
+});
+
+// ═══ 속기 모드 ═══
+let stenoWordCount = 0, stenoStartTime = 0;
+
+function setupSteno() {
+  const input = document.getElementById('steno-input');
+  if (!input) return;
+
+  input.addEventListener('input', () => {
+    const word = input.value.trim();
+    if (!word) { document.getElementById('steno-candidates').innerHTML = ''; return; }
+
+    const dict = WORD_DICT[word];
+    const candidates = document.getElementById('steno-candidates');
+    const langs = ['ko','en','ja','zh','ar','ru'];
+    const langNames = ['Korean','English','日本語','中文','العربية','Русский'];
+
+    let html = '';
+    langs.forEach((lang, i) => {
+      const text = dict?.[lang] || word;
+      html += `<div class="output-card" style="cursor:pointer;border:1px solid #333;"
+                    onclick="selectSteno('${text.replace(/'/g,"\\'")}', ${i+1})">
+        <div class="lang-name">${i+1}. ${langNames[i]}</div>
+        <div class="lang-text" style="font-size:1.1em;">${text}</div>
+      </div>`;
+    });
+    candidates.innerHTML = html;
+  });
+
+  input.addEventListener('keydown', (e) => {
+    if (e.key >= '1' && e.key <= '6' && e.ctrlKey) {
+      e.preventDefault();
+      const idx = parseInt(e.key) - 1;
+      const cards = document.querySelectorAll('#steno-candidates .output-card');
+      if (cards[idx]) cards[idx].click();
+    }
+    if (e.key === 'Enter') {
+      // 기본 한국어로 선택
+      const word = input.value.trim();
+      if (word) selectSteno(word, 1);
+    }
+  });
+}
+
+function selectSteno(text, langIdx) {
+  const transcript = document.getElementById('steno-transcript');
+  transcript.textContent += text + ' ';
+
+  stenoWordCount++;
+  if (stenoStartTime === 0) stenoStartTime = Date.now();
+
+  const elapsed = (Date.now() - stenoStartTime) / 60000; // 분
+  const wpm = elapsed > 0 ? Math.round(stenoWordCount / elapsed) : 0;
+
+  document.getElementById('steno-wpm').textContent = wpm;
+  document.getElementById('steno-count').textContent = stenoWordCount;
+
+  // 입력 초기화
+  const input = document.getElementById('steno-input');
+  input.value = '';
+  input.focus();
+  document.getElementById('steno-candidates').innerHTML = '';
+}
+
+// ═══ 신텍스 심포니 (음성 합성 — Web Speech API) ═══
+let syntaxPlaying = false;
+
+// 자모 → 로마자 변환 (TTS가 읽을 수 있도록)
+const JAMO_TO_SPEECH = {
+  // 한글 자모 → 음가 (한국어 TTS 또는 로마자 폴백)
+  'ㄱ':'그','ㄴ':'느','ㄷ':'드','ㄹ':'르','ㅁ':'므','ㅂ':'브','ㅅ':'스',
+  'ㅇ':'응','ㅈ':'즈','ㅊ':'츠','ㅋ':'크','ㅌ':'트','ㅍ':'프','ㅎ':'흐',
+  'ㅏ':'아','ㅓ':'어','ㅗ':'오','ㅜ':'우','ㅡ':'으','ㅣ':'이',
+  'ㅐ':'애','ㅔ':'에','ㅑ':'야','ㅕ':'여','ㅛ':'요','ㅠ':'유',
+};
+
+// 사용 가능한 한국어 음성 찾기
+function findKoreanVoice() {
+  const voices = speechSynthesis.getVoices();
+  return voices.find(v => v.lang.startsWith('ko')) ||
+         voices.find(v => v.lang.startsWith('en')) ||
+         voices[0];
+}
+
+function speakText(text, lang='ko-KR', rate=1.0, pitch=1.0) {
+  return new Promise(resolve => {
+    const utter = new SpeechSynthesisUtterance(text);
+    utter.lang = lang;
+    utter.rate = rate;
+    utter.pitch = pitch;
+    utter.volume = 1.0;
+
+    const voice = findKoreanVoice();
+    if (voice) utter.voice = voice;
+
+    utter.onend = resolve;
+    utter.onerror = resolve;
+    speechSynthesis.speak(utter);
+  });
+}
+
+function playSyntaxDemo(text) {
+  if (!text) text = '안녕하세요';
+  speechSynthesis.cancel();
+  syntaxPlaying = true;
+
+  const visual = document.getElementById('syntax-visual');
+  visual.textContent = '';
+
+  // 자모 시퀀스 → 읽을 수 있는 텍스트로 변환
+  let speakable = '';
+  const chars = [...text];
+  chars.forEach(ch => {
+    speakable += JAMO_TO_SPEECH[ch] || ch;
+  });
+
+  // 시각화: 한 글자씩 표시
+  chars.forEach((ch, i) => {
+    setTimeout(() => {
+      if (syntaxPlaying) visual.textContent += ch + ' ';
+    }, i * 150);
+  });
+
+  // 음성 합성
+  const utter = new SpeechSynthesisUtterance(speakable);
+
+  // 언어 자동 감지
+  const hasKorean = chars.some(c => JAMO_TO_SPEECH[c] || (c.charCodeAt(0) >= 0xAC00 && c.charCodeAt(0) <= 0xD7A3));
+  const hasJapanese = chars.some(c => (c.charCodeAt(0) >= 0x3040 && c.charCodeAt(0) <= 0x30FF));
+
+  if (hasKorean) utter.lang = 'ko-KR';
+  else if (hasJapanese) utter.lang = 'ja-JP';
+  else utter.lang = 'en-US';
+
+  utter.rate = 0.9;
+  utter.pitch = 1.1;
+
+  // 음성 선택
+  const voices = speechSynthesis.getVoices();
+  const targetVoice = voices.find(v => v.lang.startsWith(utter.lang.substring(0,2)));
+  if (targetVoice) utter.voice = targetVoice;
+
+  utter.onend = () => { syntaxPlaying = false; };
+  speechSynthesis.speak(utter);
+
+  // 진동
+  if (vibrationOn && navigator.vibrate) {
+    chars.forEach((ch, i) => {
+      setTimeout(() => { if (vibrationOn) navigator.vibrate(40); }, i * 150);
+    });
+  }
+}
+
+function stopSyntax() {
+  syntaxPlaying = false;
+  speechSynthesis.cancel();
+  document.getElementById('syntax-visual').textContent = '(stopped)';
+}
+
+// 음성 목록 로드 (비동기)
+if (typeof speechSynthesis !== 'undefined') {
+  speechSynthesis.onvoiceschanged = () => {};
+}
+
+function setupSyntax() {
+  const input = document.getElementById('syntax-input');
+  if (!input) return;
+
+  let debounce = null;
+  input.addEventListener('input', () => {
+    clearTimeout(debounce);
+    debounce = setTimeout(() => {
+      const text = input.value.trim();
+      if (text) playSyntaxDemo(text);
+    }, 500);
+  });
+}
+
+// ═══ 게임 오버레이 시뮬레이션 ═══
+const GAME_CHAT_MSGS = [
+  {sender:'Player1 🇯🇵', text:'お前はもう死んでいる', ko:'넌 이미 죽어있다', en:'You are already dead', ja:'お前はもう死んでいる', zh:'你已经死了'},
+  {sender:'Player2 🇰🇷', text:'gg 수고했어', ko:'수고했어', en:'Good game, well played', ja:'お疲れ様', zh:'辛苦了'},
+  {sender:'Player3 🇨🇳', text:'我来了！小心', ko:'내가 간다! 조심해', en:'I\'m coming! Watch out', ja:'行くぞ！気をつけて', zh:'我来了！小心'},
+  {sender:'Player4 🇺🇸', text:'Behind you!', ko:'뒤에 있어!', en:'Behind you!', ja:'後ろだ！', zh:'在你后面！'},
+  {sender:'Player5 🇷🇺', text:'Прикрой меня', ko:'나 엄호해', en:'Cover me', ja:'援護して', zh:'掩护我'},
+  {sender:'Player1 🇯🇵', text:'回復して！', ko:'회복해!', en:'Heal up!', ja:'回復して！', zh:'回血！'},
+  {sender:'Player3 🇨🇳', text:'打得好', ko:'잘했어', en:'Nice shot', ja:'ナイスショット', zh:'打得好'},
+  {sender:'Player2 🇰🇷', text:'적 발견 3시 방향', ko:'적 발견 3시 방향', en:'Enemy spotted, 3 o\'clock', ja:'敵発見 3時方向', zh:'发现敌人 3点方向'},
+];
+
+let gameSim = null;
+let gameMsgIdx = 0;
+
+function startGameSim() {
+  if (gameSim) return;
+  gameMsgIdx = 0;
+  const chat = document.getElementById('game-chat');
+  chat.innerHTML = '';
+
+  gameSim = setInterval(() => {
+    if (gameMsgIdx >= GAME_CHAT_MSGS.length) { gameMsgIdx = 0; chat.innerHTML = ''; }
+    const msg = GAME_CHAT_MSGS[gameMsgIdx];
+    gameMsgIdx++;
+
+    // 채팅 추가
+    const div = document.createElement('div');
+    div.className = 'game-chat-msg';
+    div.innerHTML = `<span class="sender">${msg.sender}</span> <span class="text">${msg.text}</span>`;
+    chat.appendChild(div);
+
+    // 오래된 메시지 제거
+    while (chat.children.length > 5) chat.removeChild(chat.firstChild);
+
+    // 자막 업데이트
+    const lang = document.getElementById('game-lang-select').value;
+    document.getElementById('gsub-original').textContent = msg.text;
+
+    if (lang === 'all') {
+      document.getElementById('gsub-en').textContent = `EN: ${msg.en}`;
+      document.getElementById('gsub-ja').textContent = `JA: ${msg.ja}`;
+    } else {
+      document.getElementById('gsub-en').textContent = msg[lang] || msg.en;
+      document.getElementById('gsub-ja').textContent = '';
+    }
+
+    // 진동
+    if (vibrationOn && navigator.vibrate) navigator.vibrate(30);
+
+  }, 2500);
+}
+
+function stopGameSim() {
+  if (gameSim) { clearInterval(gameSim); gameSim = null; }
+}
+
+let gameSubTop = false;
+function toggleGameSubPos() {
+  gameSubTop = !gameSubTop;
+  const bar = document.getElementById('game-sub-bar');
+  if (gameSubTop) {
+    bar.style.bottom = 'auto';
+    bar.style.top = '0';
+    bar.style.borderTop = 'none';
+    bar.style.borderBottom = '1px solid rgba(240,192,64,0.3)';
+  } else {
+    bar.style.top = 'auto';
+    bar.style.bottom = '0';
+    bar.style.borderBottom = 'none';
+    bar.style.borderTop = '1px solid rgba(240,192,64,0.3)';
+  }
+}
+
+// ═══ 초기화 ═══
+buildKeyboard();
+setupModeButtons();
+setupTranslator();
+setupGame();
+setupSubtitle();
+setupSteno();
+setupSyntax();
+</script>
+</body>
+</html>

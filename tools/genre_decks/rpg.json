@@ -1,0 +1,128 @@
+{
+  "genre": "rpg",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 12,
+  "entries": [
+    {
+      "term": "aggro",
+      "ko": "어그로 (적 관심)",
+      "en": "aggro (threat)",
+      "ja": "アグロ/ヘイト",
+      "zh": "仇恨",
+      "tags": [
+        "mechanic"
+      ]
+    },
+    {
+      "term": "DPS",
+      "ko": "딜러",
+      "en": "damage dealer",
+      "ja": "DPS/アタッカー",
+      "zh": "输出",
+      "tags": [
+        "role"
+      ]
+    },
+    {
+      "term": "tank",
+      "ko": "탱커",
+      "en": "tank",
+      "ja": "タンク",
+      "zh": "坦克/T",
+      "tags": [
+        "role"
+      ]
+    },
+    {
+      "term": "healer",
+      "ko": "힐러",
+      "en": "healer",
+      "ja": "ヒーラー",
+      "zh": "奶妈/治疗",
+      "tags": [
+        "role"
+      ]
+    },
+    {
+      "term": "proc",
+      "ko": "발동 (확률 효과)",
+      "en": "proc (trigger effect)",
+      "ja": "プロック",
+      "zh": "触发",
+      "tags": [
+        "mechanic"
+      ]
+    },
+    {
+      "term": "loot",
+      "ko": "전리품/루팅",
+      "en": "loot",
+      "ja": "ルート/ドロップ",
+      "zh": "掉落",
+      "tags": [
+        "item"
+      ]
+    },
+    {
+      "term": "raid",
+      "ko": "레이드",
+      "en": "raid",
+      "ja": "レイド",
+      "zh": "团本",
+      "tags": [
+        "content"
+      ]
+    },
+    {
+      "term": "meta",
+      "ko": "메타 (최적 전략)",
+      "en": "meta (optimal strategy)",
+      "ja": "メタ",
+      "zh": "版本答案",
+      "tags": [
+        "strategy"
+      ]
+    },
+    {
+      "term": "grind",
+      "ko": "노가다/파밍",
+      "en": "grinding",
+      "ja": "周回",
+      "zh": "肝/刷",
+      "tags": [
+        "activity"
+      ]
+    },
+    {
+      "term": "nerf",
+      "ko": "너프 (하향)",
+      "en": "nerf",
+      "ja": "ナーフ",
+      "zh": "削弱",
+      "tags": [
+        "balance"
+      ]
+    },
+    {
+      "term": "gacha",
+      "ko": "가챠/뽑기",
+      "en": "gacha (random pull)",
+      "ja": "ガチャ",
+      "zh": "抽卡",
+      "tags": [
+        "monetization"
+      ]
+    },
+    {
+      "term": "whale",
+      "ko": "고래 (과금러)",
+      "en": "whale (big spender)",
+      "ja": "廃課金",
+      "zh": "氪佬/大佬",
+      "tags": [
+        "player"
+      ]
+    }
+  ]
+}

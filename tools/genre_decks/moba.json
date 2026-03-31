@@ -1,0 +1,128 @@
+{
+  "genre": "moba",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 12,
+  "entries": [
+    {
+      "term": "gank",
+      "ko": "기습/갱킹",
+      "en": "gank (surprise attack)",
+      "ja": "ガンク",
+      "zh": "抓人/Gank",
+      "tags": [
+        "tactic"
+      ]
+    },
+    {
+      "term": "lane",
+      "ko": "라인",
+      "en": "lane",
+      "ja": "レーン",
+      "zh": "路/线",
+      "tags": [
+        "map"
+      ]
+    },
+    {
+      "term": "jungle",
+      "ko": "정글링",
+      "en": "jungling",
+      "ja": "ジャングル",
+      "zh": "打野",
+      "tags": [
+        "role"
+      ]
+    },
+    {
+      "term": "feed",
+      "ko": "적 먹여주기",
+      "en": "feeding (dying repeatedly)",
+      "ja": "フィード",
+      "zh": "送人头",
+      "tags": [
+        "play"
+      ]
+    },
+    {
+      "term": "carry",
+      "ko": "캐리",
+      "en": "carry (lead team to win)",
+      "ja": "キャリー",
+      "zh": "C位/Carry",
+      "tags": [
+        "role"
+      ]
+    },
+    {
+      "term": "tower dive",
+      "ko": "타워 다이브",
+      "en": "tower dive",
+      "ja": "タワーダイブ",
+      "zh": "越塔",
+      "tags": [
+        "tactic"
+      ]
+    },
+    {
+      "term": "ward",
+      "ko": "와드 (시야)",
+      "en": "ward (vision)",
+      "ja": "ワード",
+      "zh": "插眼/排眼",
+      "tags": [
+        "vision"
+      ]
+    },
+    {
+      "term": "CS",
+      "ko": "미니언 처치",
+      "en": "creep score",
+      "ja": "CS",
+      "zh": "补刀",
+      "tags": [
+        "stat"
+      ]
+    },
+    {
+      "term": "CC",
+      "ko": "군중제어",
+      "en": "crowd control",
+      "ja": "CC",
+      "zh": "控制",
+      "tags": [
+        "ability"
+      ]
+    },
+    {
+      "term": "ult",
+      "ko": "궁극기",
+      "en": "ultimate ability",
+      "ja": "ウルト",
+      "zh": "大招",
+      "tags": [
+        "ability"
+      ]
+    },
+    {
+      "term": "baron",
+      "ko": "바론",
+      "en": "baron/roshan",
+      "ja": "バロン",
+      "zh": "大龙",
+      "tags": [
+        "objective"
+      ]
+    },
+    {
+      "term": "ace",
+      "ko": "에이스 (전멸)",
+      "en": "ace (team wipe)",
+      "ja": "エース",
+      "zh": "团灭",
+      "tags": [
+        "event"
+      ]
+    }
+  ]
+}

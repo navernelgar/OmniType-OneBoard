@@ -1,0 +1,188 @@
+{
+  "genre": "wow",
+  "version": "1.0",
+  "generated": "2026-03-31",
+  "entry_count": 18,
+  "entries": [
+    {
+      "term": "Horde",
+      "ko": "호드 (진영)",
+      "en": "Horde (faction)",
+      "ja": "ホード（陣営）",
+      "zh": "部落（阵营）",
+      "tags": [
+        "faction"
+      ]
+    },
+    {
+      "term": "Alliance",
+      "ko": "얼라이언스 (진영)",
+      "en": "Alliance (faction)",
+      "ja": "アライアンス（陣営）",
+      "zh": "联盟（阵营）",
+      "tags": [
+        "faction"
+      ]
+    },
+    {
+      "term": "Azeroth",
+      "ko": "아제로스 (세계)",
+      "en": "Azeroth (world)",
+      "ja": "アゼロス",
+      "zh": "艾泽拉斯",
+      "tags": [
+        "world"
+      ]
+    },
+    {
+      "term": "Thrall",
+      "ko": "스랄 (대족장)",
+      "en": "Thrall (Warchief)",
+      "ja": "スラル",
+      "zh": "萨尔",
+      "tags": [
+        "character"
+      ]
+    },
+    {
+      "term": "Lich King",
+      "ko": "리치 왕",
+      "en": "Lich King",
+      "ja": "リッチキング",
+      "zh": "巫妖王",
+      "tags": [
+        "character"
+      ]
+    },
+    {
+      "term": "Mana",
+      "ko": "마나 (마력)",
+      "en": "Mana (magic resource)",
+      "ja": "マナ",
+      "zh": "法力",
+      "tags": [
+        "resource"
+      ]
+    },
+    {
+      "term": "Hearthstone",
+      "ko": "귀환석 (마을 귀환)",
+      "en": "Hearthstone (teleport home)",
+      "ja": "炉石（帰還石）",
+      "zh": "炉石（回城石）",
+      "tags": [
+        "item"
+      ]
+    },
+    {
+      "term": "Raid",
+      "ko": "공격대 (10~25인)",
+      "en": "Raid (10-25 player)",
+      "ja": "レイド",
+      "zh": "团队副本",
+      "tags": [
+        "content"
+      ]
+    },
+    {
+      "term": "Instance",
+      "ko": "인스턴스 (던전)",
+      "en": "Instance (dungeon)",
+      "ja": "インスタンス",
+      "zh": "副本",
+      "tags": [
+        "content"
+      ]
+    },
+    {
+      "term": "Warchief",
+      "ko": "대족장",
+      "en": "Warchief",
+      "ja": "大首長",
+      "zh": "大酋长",
+      "tags": [
+        "title"
+      ]
+    },
+    {
+      "term": "Undead",
+      "ko": "언데드 (포세이큰)",
+      "en": "Undead (Forsaken)",
+      "ja": "アンデッド",
+      "zh": "亡灵（被遗忘者）",
+      "tags": [
+        "race"
+      ]
+    },
+    {
+      "term": "Blood Elf",
+      "ko": "블러드 엘프",
+      "en": "Blood Elf",
+      "ja": "ブラッドエルフ",
+      "zh": "血精灵",
+      "tags": [
+        "race"
+      ]
+    },
+    {
+      "term": "DK",
+      "ko": "죽기 (죽음의 기사)",
+      "en": "Death Knight",
+      "ja": "デスナイト",
+      "zh": "死亡骑士",
+      "tags": [
+        "class"
+      ]
+    },
+    {
+      "term": "WTB",
+      "ko": "삽니다",
+      "en": "Want to Buy",
+      "ja": "買います",
+      "zh": "收",
+      "tags": [
+        "trade"
+      ]
+    },
+    {
+      "term": "WTS",
+      "ko": "팝니다",
+      "en": "Want to Sell",
+      "ja": "売ります",
+      "zh": "出",
+      "tags": [
+        "trade"
+      ]
+    },
+    {
+      "term": "LFG",
+      "ko": "파티 구함",
+      "en": "Looking for Group",
+      "ja": "メンバー募集",
+      "zh": "找队伍",
+      "tags": [
+        "social"
+      ]
+    },
+    {
+      "term": "GG",
+      "ko": "수고했어",
+      "en": "Good Game",
+      "ja": "お疲れ",
+      "zh": "GG",
+      "tags": [
+        "social"
+      ]
+    },
+    {
+      "term": "AFK",
+      "ko": "자리비움",
+      "en": "Away from Keyboard",
+      "ja": "離席",
+      "zh": "挂机",
+      "tags": [
+        "social"
+      ]
+    }
+  ]
+}
