@@ -2,11 +2,27 @@
 <html lang="ko">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>OmniType OneBoard — Demo</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<meta name="theme-color" content="#F0C040">
+<link rel="manifest" href="manifest.json">
+<title>원타 키보드 — WONTA Keyboard</title>
 <style>
 * { margin:0; padding:0; box-sizing:border-box; }
 body { background:#0A0A0F; color:#fff; font-family:'Segoe UI','Malgun Gothic',sans-serif; overflow-x:hidden; }
+
+/* 모바일 반응형 */
+@media (max-width:768px) {
+  .header h1 { font-size:1.5em; }
+  .key { width:38px; height:42px; font-size:0.8em; }
+  .key .main { font-size:1em; }
+  .key .sub { font-size:0.5em; }
+  .key-row { gap:3px; }
+  .mode-buttons { gap:6px; padding:8px; }
+  .mode-btn { width:70px; height:40px; font-size:0.7em; }
+  .input-display { font-size:1.3em; }
+}
 
 /* 헤더 */
 .header { text-align:center; padding:30px 20px 10px; }
@@ -145,26 +161,17 @@ body { background:#0A0A0F; color:#fff; font-family:'Segoe UI','Malgun Gothic',sa
 <body>
 
 <div class="header">
-  <h1>OmniType <span>OneBoard</span></h1>
-  <p>One Keyboard, Every Language — Interactive Demo</p>
+  <h1>원타 <span>키보드</span></h1>
+  <p>하나의 키보드, 모든 언어 — WONTA Keyboard Demo</p>
 </div>
 
-<!-- 상단 5버튼 -->
+<!-- 상단 버튼 — 키보드 + 설정만 -->
 <div class="mode-buttons">
   <div class="mode-btn active" data-mode="keyboard">
-    <div class="btn-icon">⌨</div><div class="btn-label">Translate</div>
+    <div class="btn-icon">⌨</div><div class="btn-label">Keyboard</div>
   </div>
-  <div class="mode-btn" data-mode="subtitle">
-    <div class="btn-icon">CC</div><div class="btn-label">Subtitle</div>
-  </div>
-  <div class="mode-btn" data-mode="steno">
-    <div class="btn-icon">⚡</div><div class="btn-label">Steno</div>
-  </div>
-  <div class="mode-btn" data-mode="syntax">
-    <div class="btn-icon">♪</div><div class="btn-label">Syntax</div>
-  </div>
-  <div class="mode-btn" data-mode="gameoverlay">
-    <div class="btn-icon">🎮</div><div class="btn-label">Game</div>
+  <div class="mode-btn" data-mode="settings">
+    <div class="btn-icon">⚙</div><div class="btn-label">Settings</div>
   </div>
 </div>
 
@@ -181,168 +188,62 @@ body { background:#0A0A0F; color:#fff; font-family:'Segoe UI','Malgun Gothic',sa
 <!-- ═══ 키보드 모드 (+ 번역 + 퀴즈) ═══ -->
 <div class="mode active" id="mode-keyboard">
   <div class="input-area">
-    <label>Current Language: <span id="current-lang">Korean</span> (한/영: switch)</label>
+    <label><span id="current-lang" style="color:#F0C040;font-size:1.1em;">Korean</span>
+    <span style="color:#555;font-size:0.8em;margin-left:10px;">한영키: 전환 | 한영키+숫자: 모드 선택 | Enter: 복사</span></label>
     <div class="input-display" id="kb-display">_</div>
+    <div id="copy-indicator" style="text-align:center;color:#F0C040;font-size:0.8em;height:1.2em;"></div>
   </div>
 
   <div class="keyboard" id="keyboard-container"></div>
 
-  <div class="output-area" id="kb-output">
-    <div class="output-card"><div class="lang-name">Korean</div><div class="lang-text" id="out-ko"></div></div>
-    <div class="output-card"><div class="lang-name">English</div><div class="lang-text" id="out-en"></div></div>
-    <div class="output-card"><div class="lang-name">日本語</div><div class="lang-text" id="out-ja"></div></div>
-    <div class="output-card"><div class="lang-name">中文</div><div class="lang-text" id="out-zh"></div></div>
-    <div class="output-card"><div class="lang-name">العربية</div><div class="lang-text" id="out-ar"></div></div>
-    <div class="output-card"><div class="lang-name">Русский</div><div class="lang-text" id="out-ru"></div></div>
-  </div>
-</div>
-
-<!-- ═══ 번역기 모드 ═══ -->
-<div class="mode" id="mode-translator">
-  <h2 style="margin-bottom:15px;">Real-time Translation <span style="color:#888;font-size:0.5em;">— 90% lookup, 0ms, offline</span></h2>
-  <textarea class="translator-input" id="tr-input" placeholder="Type anything..."></textarea>
-  <div class="output-area" id="tr-output" style="margin-top:15px;">
-    <div class="output-card"><div class="lang-name">Korean</div><div class="lang-text" id="tr-ko"></div></div>
-    <div class="output-card"><div class="lang-name">English</div><div class="lang-text" id="tr-en"></div></div>
-    <div class="output-card"><div class="lang-name">日本語</div><div class="lang-text" id="tr-ja"></div></div>
-    <div class="output-card"><div class="lang-name">中文</div><div class="lang-text" id="tr-zh"></div></div>
-    <div class="output-card"><div class="lang-name">العربية</div><div class="lang-text" id="tr-ar"></div></div>
-    <div class="output-card"><div class="lang-name">Русский</div><div class="lang-text" id="tr-ru"></div></div>
-  </div>
-</div>
-
-<!-- ═══ 게임 모드 ═══ -->
-<div class="mode" id="mode-game">
-  <div class="game-area">
-    <h2>Level 1: Same Sound Match</h2>
-    <p style="color:#888;margin:10px 0;">Type the matching character. Same sound = same key.</p>
-    <div class="game-prompt" id="game-prompt">か</div>
-    <div class="game-hint" id="game-hint">What Korean character sounds like this?</div>
-    <input class="game-input" id="game-input" placeholder="Type..." maxlength="3" autofocus>
-    <div class="game-result" id="game-result"></div>
-    <div class="game-score">Score: <span id="game-score">0</span> | Streak: <span id="game-streak">0</span></div>
-  </div>
-</div>
-
-<!-- ═══ 자막 모드 ═══ -->
-<div class="mode" id="mode-subtitle">
-  <h2 style="margin-bottom:15px;">Subtitle Mode</h2>
-  <p style="color:#888;margin-bottom:15px;">Type and see real-time subtitles in multiple languages at the bottom of the screen.</p>
-  <textarea class="translator-input" id="sub-input" placeholder="Type here — subtitles appear below..."></textarea>
-  <div style="margin-top:15px;color:#888;font-size:0.9em;">
-    <p>Subtitle languages: Korean + English + 日本語 + 中文</p>
-    <p style="margin-top:8px;">Use the toggle button (bottom-right) to show/hide subtitles.</p>
-  </div>
-</div>
-
-<!-- ═══ 속기 모드 ═══ -->
-<div class="mode" id="mode-steno">
-  <h2 style="margin-bottom:15px;">Stenography Mode <span style="color:#888;font-size:0.5em;">— Court Reporter Speed</span></h2>
-  <p style="color:#888;margin-bottom:15px;">Type words → see candidate translations → press number to select.</p>
-
-  <div class="input-area">
-    <label>Input (type Korean or English)</label>
-    <input class="translator-input" id="steno-input" placeholder="Type a word..." style="height:50px;font-size:1.2em;">
-  </div>
-
-  <div style="margin:15px 0;">
-    <div class="input-area">
-      <label style="color:#F0C040;">Candidates (press 1-6 to select)</label>
-      <div id="steno-candidates" style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-top:10px;"></div>
-    </div>
-  </div>
-
-  <div class="input-area">
-    <label>Transcript</label>
-    <div id="steno-transcript" style="font-size:1.2em;min-height:60px;margin-top:8px;line-height:1.8;"></div>
-  </div>
-
-  <div style="color:#555;font-size:0.8em;margin-top:10px;">
-    Speed: <span id="steno-wpm">0</span> WPM | Words: <span id="steno-count">0</span>
-  </div>
-</div>
-
-<!-- ═══ 신텍스 심포니 모드 ═══ -->
-<div class="mode" id="mode-syntax">
-  <h2 style="margin-bottom:15px;">Syntax Symphony <span style="color:#888;font-size:0.5em;">♪ Text → Music</span></h2>
-  <p style="color:#888;margin-bottom:15px;">Type text and hear it as music. Each phoneme has a frequency based on mouth position.</p>
-
-  <div class="input-area">
-    <label>Type to play</label>
-    <input class="translator-input" id="syntax-input" placeholder="Type Korean or English..." style="height:50px;font-size:1.2em;">
-  </div>
-
-  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin:15px 0;">
-    <div class="output-card">
-      <div class="lang-name">Labial (lips) — 220Hz</div>
-      <div style="color:#F0C040;font-size:1.5em;" id="syn-labial">ㅁ ㅂ ㅍ m b p</div>
-    </div>
-    <div class="output-card">
-      <div class="lang-name">Coronal (tongue) — 330Hz</div>
-      <div style="color:#80C0FF;font-size:1.5em;" id="syn-coronal">ㄴ ㄷ ㅌ ㄹ n d t r</div>
-    </div>
-    <div class="output-card">
-      <div class="lang-name">Velar (throat) — 294Hz</div>
-      <div style="color:#FF8080;font-size:1.5em;" id="syn-velar">ㄱ ㅋ g k</div>
-    </div>
-  </div>
-
-  <div class="input-area">
-    <label>♪ Playing</label>
-    <div id="syntax-visual" style="font-size:1.5em;min-height:40px;margin-top:8px;letter-spacing:3px;"></div>
-  </div>
-
-  <div style="display:flex;gap:10px;margin-top:15px;">
-    <button onclick="playSyntaxDemo()" style="padding:10px 20px;border-radius:8px;border:1px solid #F0C040;background:#1A1A28;color:#F0C040;cursor:pointer;font-size:0.9em;">▶ Play "안녕하세요"</button>
-    <button onclick="playSyntaxDemo('hello')" style="padding:10px 20px;border-radius:8px;border:1px solid #80C0FF;background:#1A1A28;color:#80C0FF;cursor:pointer;font-size:0.9em;">▶ Play "hello"</button>
-    <button onclick="stopSyntax()" style="padding:10px 20px;border-radius:8px;border:1px solid #888;background:#1A1A28;color:#888;cursor:pointer;font-size:0.9em;">■ Stop</button>
-  </div>
-</div>
-
-<!-- ═══ 게임 오버레이 모드 ═══ -->
-<div class="mode" id="mode-gameoverlay">
-  <h2 style="margin-bottom:15px;">Game Overlay <span style="color:#888;font-size:0.5em;">— Non-intrusive subtitle translation</span></h2>
-
-  <div class="game-overlay-container">
-    <div class="game-screen">
-      <div class="fake-game">GAME SCREEN</div>
-
-      <!-- 인게임 채팅 (시뮬레이션) -->
-      <div class="game-chat" id="game-chat"></div>
-
-      <!-- 하단 자막 바 (반투명 오버레이) -->
-      <div class="game-subtitle-bar" id="game-sub-bar">
-        <div class="sub-line original" id="gsub-original">Waiting for game text...</div>
-        <div class="sub-line translated" id="gsub-en"></div>
-        <div class="sub-line translated" id="gsub-ja"></div>
+  <!-- ═══ 점자 변환 (braille 모드 전용) ═══ -->
+  <div id="braille-area" style="display:none; margin:15px auto; max-width:900px;">
+    <div style="display:flex; align-items:center; gap:10px; margin-bottom:10px; flex-wrap:wrap;">
+      <span style="color:#F0C040; font-weight:bold; font-size:1.1em;">⠿ 원본</span>
+      <!-- 서브언어 탭 -->
+      <div style="display:flex;gap:4px;">
+        <button class="br-lang-btn active" onclick="setBrailleLang('ko')" id="brlang-ko"
+          style="padding:3px 10px;border-radius:5px;border:1px solid #E040A0;background:#2A1A28;color:#E040A0;cursor:pointer;font-size:0.8em;">🇰🇷 한국</button>
+        <button class="br-lang-btn" onclick="setBrailleLang('en')" id="brlang-en"
+          style="padding:3px 10px;border-radius:5px;border:1px solid #555;background:#1A1A28;color:#888;cursor:pointer;font-size:0.8em;">🇺🇸 English</button>
+        <button class="br-lang-btn" onclick="setBrailleLang('ja')" id="brlang-ja"
+          style="padding:3px 10px;border-radius:5px;border:1px solid #555;background:#1A1A28;color:#555;cursor:pointer;font-size:0.8em;">🇯🇵 준비중</button>
+        <button class="br-lang-btn" onclick="setBrailleLang('zh')" id="brlang-zh"
+          style="padding:3px 10px;border-radius:5px;border:1px solid #555;background:#1A1A28;color:#555;cursor:pointer;font-size:0.8em;">🇨🇳 준비중</button>
       </div>
+      <button onclick="clearBraille()" style="padding:4px 14px;border-radius:6px;border:1px solid #555;background:#1A1A28;color:#888;cursor:pointer;font-size:0.85em;margin-left:auto;">✕ Clear</button>
     </div>
-
-    <!-- 컨트롤 -->
-    <div class="game-controls">
-      <button class="active" onclick="startGameSim()">▶ Simulate Chat</button>
-      <button onclick="stopGameSim()">■ Stop</button>
-      <select id="game-lang-select">
-        <option value="en">Translate → English</option>
-        <option value="ja">Translate → 日本語</option>
-        <option value="zh">Translate → 中文</option>
-        <option value="all">All Languages</option>
-      </select>
-      <button onclick="toggleGameSubPos()">↕ Position</button>
+    <!-- 점자 변환 결과 (큰 글씨) -->
+    <div style="background:#111118;border-radius:12px;border:2px solid #333;padding:20px;min-height:80px;">
+      <div id="braille-output" style="font-size:3em;color:#F0C040;letter-spacing:6px;word-break:break-all;min-height:50px;line-height:1.3;">⠀</div>
     </div>
-  </div>
-
-  <div style="color:#888;font-size:0.85em;margin-top:15px;">
-    <p>• Mouse/keyboard pass-through — subtitles don't block game input</p>
-    <p>• Voice + text translated simultaneously</p>
-    <p>• 0ms lookup, no server, works offline</p>
   </div>
 </div>
 
-<button class="subtitle-toggle off" id="sub-toggle" onclick="toggleSubtitle()">CC OFF</button>
-<div class="subtitle-bar hidden" id="subtitle-bar">
-  <span id="sub-text">Subtitles will appear here...</span>
+<!-- ═══ 세팅 모드 ═══ -->
+<div class="mode" id="mode-settings">
+  <h2 style="margin-bottom:20px;">⚙ Language Slot Settings</h2>
+  <p style="color:#888;margin-bottom:20px;">Customize which languages/modes are assigned to keys 1~9.<br>
+  Press 🌐 + number to switch instantly. Includes: languages + ∑math + ⚗chem + ⠿braille</p>
+
+  <div id="slot-editor" style="display:grid;grid-template-columns:repeat(3,1fr);gap:15px;max-width:700px;"></div>
+
+  <div style="margin-top:25px;display:flex;gap:12px;">
+    <button id="settings-apply-btn" onclick="applySlotSettings()"
+      style="padding:12px 30px;border-radius:10px;border:2px solid #F0C040;background:#2A1A38;color:#F0C040;cursor:pointer;font-size:1em;font-weight:bold;">
+      ✓ Apply
+    </button>
+    <button onclick="resetSlotSettings()"
+      style="padding:12px 20px;border-radius:10px;border:1px solid #555;background:#1A1A28;color:#888;cursor:pointer;font-size:0.9em;">
+      Reset Default
+    </button>
+  </div>
+
+  <div style="margin-top:25px;color:#555;font-size:0.8em;">
+    <p>195+ languages + ∑math + ⚗chem. Add your own: codes.json format → email us.</p>
+  </div>
 </div>
+
 
 <script>
 // ═══ 음소 매핑 데이터 ═══
@@ -409,60 +310,969 @@ const WORD_DICT = {
   'coffee': {ko:'커피',ja:'コーヒー',zh:'咖啡',ar:'قهوة',ru:'кофе'},
 };
 
-// ═══ 키보드 생성 ═══
-const KB_ROWS = [
-  [{m:'ㅂ',s:'b',c:true},{m:'ㅈ',s:'j',c:true},{m:'ㄷ',s:'d',c:true},{m:'ㄱ',s:'g',c:true},{m:'ㅅ',s:'s',c:true},
-   {m:'ㅛ',s:'yo',c:false},{m:'ㅕ',s:'yeo',c:false},{m:'ㅑ',s:'ya',c:false},{m:'ㅐ',s:'ae',c:false},{m:'ㅔ',s:'e',c:false}],
-  [{m:'ㅁ',s:'m',c:true},{m:'ㄴ',s:'n',c:true},{m:'ㅇ',s:'ng',c:true},{m:'ㄹ',s:'r',c:true},{m:'ㅎ',s:'h',c:true},
-   {m:'ㅗ',s:'o',c:false},{m:'ㅓ',s:'eo',c:false},{m:'ㅏ',s:'a',c:false},{m:'ㅣ',s:'i',c:false}],
-  [{m:'ㅋ',s:'k',c:true},{m:'ㅌ',s:'t',c:true},{m:'ㅊ',s:'ch',c:true},{m:'ㅍ',s:'p',c:true},
-   {m:'ㅠ',s:'yu',c:false},{m:'ㅜ',s:'u',c:false},{m:'ㅡ',s:'eu',c:false}],
+// ═══ 언어 정의 ═══
+const LANGUAGES = ['ko','en','ja','zh','ar','ru','math','chem','braille'];
+const LANG_NAMES = {ko:'Korean',en:'English',ja:'日本語',zh:'中文',ar:'العربية',ru:'Русский',math:'수학',chem:'화학',braille:'점자'};
+const LANG_FLAGS = {ko:'🇰🇷',en:'🇺🇸',ja:'🇯🇵',zh:'🇨🇳',ar:'🇸🇦',ru:'🇷🇺',math:'∑',chem:'⚗',braille:'⠿'};
+let currentLang = 'ko';
+
+// ═══ 키보드 레이아웃 (음소 기반 — 모든 언어 같은 위치) ═══
+// 창힐(倉頡) 부수 매핑: QWERTY 위치 → 창힐 코드(a~y)
+// 키보드의 물리 위치에 맞춰 창힐 부수를 배치
+const KB_KEYS = [
+  // 수학 모드: 키 = 코드 입력용 알파벳 (창힐처럼 조합)
+  // 예: s+i+n → sin, p+i → π, a+l+p → α
+  // QWERTY 위치: Q  W  E  R  T  Y  U  I  O  P
+  //              A  S  D  F  G  H  J  K  L
+  //              Z  X  C  V  B  N  M
+  {id:'k_b', ko:'ㅂ',en:'q',ja:'q',zh:'月',zhCode:'b', ar:'ض',ru:'й', math:'β', chem:'B', braille:'ㅂ', c:true},
+  {id:'k_j', ko:'ㅈ',en:'w',ja:'w',zh:'十',zhCode:'j', ar:'ص',ru:'ц', math:'j', chem:'j', braille:'ㅈ', c:true},
+  {id:'k_d', ko:'ㄷ',en:'e',ja:'e',zh:'木',zhCode:'d', ar:'ث',ru:'у', math:'δ', chem:'Dy', braille:'ㄷ', c:true},
+  {id:'k_g', ko:'ㄱ',en:'r',ja:'r',zh:'土',zhCode:'g', ar:'ق',ru:'к', math:'γ', chem:'Ga', braille:'ㄱ', c:true},
+  {id:'k_s', ko:'ㅅ',en:'t',ja:'t',zh:'尸',zhCode:'s', ar:'ف',ru:'е', math:'sin', chem:'S', braille:'ㅅ', c:true},
+  {id:'k_yo',ko:'ㅛ',en:'y',ja:'y',zh:'卜',zhCode:'y', ar:'غ',ru:'н', math:'y', chem:'Y', braille:'ㅛ', c:false},
+  {id:'k_yeo',ko:'ㅕ',en:'u',ja:'u',zh:'山',zhCode:'u', ar:'ع',ru:'г', math:'υ', chem:'U', braille:'ㅕ', c:false},
+  {id:'k_ya',ko:'ㅑ',en:'i',ja:'i',zh:'戈',zhCode:'i', ar:'ه',ru:'ш', math:'∫', chem:'I', braille:'ㅑ', c:false},
+  {id:'k_ae',ko:'ㅐ',en:'o',ja:'o',zh:'人',zhCode:'o', ar:'خ',ru:'щ', math:'Ω', chem:'O', braille:'ㅐ', c:false},
+  {id:'k_e', ko:'ㅔ',en:'p',ja:'p',zh:'心',zhCode:'p', ar:'ح',ru:'з', math:'π', chem:'P', braille:'ㅔ', c:false},
+  {id:'ROW_BREAK'},
+  {id:'k_m', ko:'ㅁ',en:'a',ja:'a',zh:'日',zhCode:'a', ar:'ش',ru:'ф', math:'α', chem:'Al', braille:'ㅁ', c:true},
+  {id:'k_n', ko:'ㄴ',en:'s',ja:'s',zh:'尸',zhCode:'s', ar:'س',ru:'ы', math:'ℕ', chem:'N', braille:'ㄴ', c:true},
+  {id:'k_ng',ko:'ㅇ',en:'d',ja:'d',zh:'木',zhCode:'d', ar:'ي',ru:'в', math:'ε', chem:'Er', braille:'ㅇ', c:true},
+  {id:'k_r', ko:'ㄹ',en:'f',ja:'f',zh:'火',zhCode:'f', ar:'ب',ru:'а', math:'ℝ', chem:'Ra', braille:'ㄹ', c:true},
+  {id:'k_h', ko:'ㅎ',en:'g',ja:'g',zh:'竹',zhCode:'h', ar:'ل',ru:'п', math:'ℏ', chem:'H', braille:'ㅎ', c:true},
+  {id:'k_o', ko:'ㅗ',en:'h',ja:'h',zh:'大',zhCode:'k', ar:'ا',ru:'р', math:'κ', chem:'K', braille:'ㅗ', c:false},
+  {id:'k_eo',ko:'ㅓ',en:'j',ja:'j',zh:'中',zhCode:'l', ar:'ت',ru:'о', math:'λ', chem:'Li', braille:'ㅓ', c:false},
+  {id:'k_a', ko:'ㅏ',en:'k',ja:'k',zh:'一',zhCode:'m', ar:'ن',ru:'л', math:'μ', chem:'Mg', braille:'ㅏ', c:false},
+  {id:'k_i', ko:'ㅣ',en:'l',ja:'l',zh:'弓',zhCode:'n', ar:'م',ru:'д', math:'θ', chem:'Ti', braille:'ㅣ', c:false},
+  {id:'ROW_BREAK'},
+  {id:'k_k', ko:'ㅋ',en:'z',ja:'z',zh:'難',zhCode:'x', ar:'ئ',ru:'я', math:'∎', chem:'(aq)', braille:'ㅋ', c:true},
+  {id:'k_t', ko:'ㅌ',en:'x',ja:'x',zh:'金',zhCode:'c', ar:'ء',ru:'ч', math:'cos', chem:'C', braille:'ㅌ', c:true},
+  {id:'k_ch',ko:'ㅊ',en:'c',ja:'c',zh:'女',zhCode:'v', ar:'ؤ',ru:'с', math:'∨', chem:'V', braille:'ㅊ', c:true},
+  {id:'k_p', ko:'ㅍ',en:'v',ja:'v',zh:'田',zhCode:'w', ar:'ر',ru:'м', math:'ω', chem:'W', braille:'ㅍ', c:true},
+  {id:'k_yu',ko:'ㅠ',en:'b',ja:'b',zh:'水',zhCode:'e', ar:'لا',ru:'и', math:'!', chem:'F', braille:'ㅠ', c:false},
+  {id:'k_u', ko:'ㅜ',en:'n',ja:'n',zh:'口',zhCode:'r', ar:'ى',ru:'т', math:'ξ', chem:'Xe', braille:'ㅜ', c:false},
+  {id:'k_eu',ko:'ㅡ',en:'m',ja:'m',zh:'手',zhCode:'q', ar:'ة',ru:'ь', math:'ζ', chem:'Zn', braille:'ㅡ', c:false},
 ];
 
+// ═══ 키보드 생성 ═══
 function buildKeyboard() {
   const container = document.getElementById('keyboard-container');
-  KB_ROWS.forEach(row => {
-    const rowDiv = document.createElement('div');
-    rowDiv.className = 'key-row';
-    row.forEach(k => {
-      const key = document.createElement('div');
-      key.className = `key ${k.c ? 'consonant' : 'vowel'}`;
-      key.innerHTML = `<div class="main">${k.m}</div><div class="sub">${k.s}</div>`;
-      key.dataset.phoneme = k.m;
-      key.addEventListener('click', () => pressKey(k.m));
-      key.addEventListener('mousedown', () => key.classList.add('pressed'));
-      key.addEventListener('mouseup', () => setTimeout(() => key.classList.remove('pressed'), 100));
-      rowDiv.appendChild(key);
-    });
-    container.appendChild(rowDiv);
+  container.innerHTML = '';
+
+  // ── 숫자 행 (1~6 = 언어 선택) ──
+  const numRow = document.createElement('div');
+  numRow.className = 'key-row';
+  LANGUAGES.forEach((lang, i) => {
+    const nk = document.createElement('div');
+    nk.className = 'key func';
+    nk.dataset.langNum = String(i + 1);
+    nk.style.width = LANGUAGES.length > 6 ? '80px' : '95px';
+    if (lang === currentLang) {
+      nk.style.borderColor = '#F0C040';
+      nk.style.background = '#2A1A38';
+    }
+    nk.innerHTML = `<div class="main" style="font-size:1em;">${i+1} ${LANG_FLAGS[lang]}</div><div class="sub">${LANG_NAMES[lang]}</div>`;
+    nk.addEventListener('click', () => selectLanguage(lang));
+    nk.addEventListener('mousedown', () => nk.classList.add('pressed'));
+    nk.addEventListener('mouseup', () => setTimeout(() => nk.classList.remove('pressed'), 150));
+    numRow.appendChild(nk);
   });
+  container.appendChild(numRow);
+
+  // ── 음소 키 행들 ──
+  let rowDiv = document.createElement('div');
+  rowDiv.className = 'key-row';
+
+  KB_KEYS.forEach(k => {
+    if (k.id === 'ROW_BREAK') {
+      container.appendChild(rowDiv);
+      rowDiv = document.createElement('div');
+      rowDiv.className = 'key-row';
+      return;
+    }
+    const key = document.createElement('div');
+    key.className = `key ${k.c ? 'consonant' : 'vowel'}`;
+    const dispLang = (currentLang === 'braille') ? brailleSubLang : currentLang;
+    const mainChar = k[dispLang];
+    const subChar = dispLang === 'ko' ? k.en : k.ko;
+    key.innerHTML = `<div class="main">${mainChar}</div><div class="sub">${subChar}</div>`;
+    key.dataset.keyId = k.id;
+    key.addEventListener('click', () => pressKey(k.id));
+    key.addEventListener('mousedown', () => key.classList.add('pressed'));
+    key.addEventListener('mouseup', () => setTimeout(() => key.classList.remove('pressed'), 150));
+    rowDiv.appendChild(key);
+  });
+  container.appendChild(rowDiv);
+
+  // 하단: 🌐 언어전환 + Space + ⌫ 백스페이스
+  const funcRow = document.createElement('div');
+  funcRow.className = 'key-row';
+  funcRow.style.marginTop = '8px';
+
+  // 🌐 언어 전환 버튼
+  const langBtn = document.createElement('div');
+  langBtn.className = 'key func';
+  langBtn.id = 'lang-switch-btn';
+  langBtn.style.width = '100px';
+  langBtn.style.background = '#2A1A38';
+  langBtn.style.borderColor = '#F0C040';
+  langBtn.innerHTML = `<div class="main">${LANG_FLAGS[currentLang]}</div><div class="sub" style="color:#F0C040">${LANG_NAMES[currentLang]}</div>`;
+  langBtn.addEventListener('click', switchLanguage);
+  langBtn.addEventListener('mousedown', () => langBtn.classList.add('pressed'));
+  langBtn.addEventListener('mouseup', () => setTimeout(() => langBtn.classList.remove('pressed'), 150));
+  funcRow.appendChild(langBtn);
+
+  // 수학 모드: 0 키, . 키
+  if (currentLang === 'math') {
+    const zeroBtn = document.createElement('div');
+    zeroBtn.className = 'key func';
+    zeroBtn.style.width = '50px';
+    zeroBtn.innerHTML = `<div class="main">0</div>`;
+    zeroBtn.addEventListener('click', () => { inputBuffer.push('MATH:0'); updateDisplay(); });
+    funcRow.appendChild(zeroBtn);
+
+    const dotBtn = document.createElement('div');
+    dotBtn.className = 'key func';
+    dotBtn.style.width = '50px';
+    dotBtn.innerHTML = `<div class="main">.</div>`;
+    dotBtn.addEventListener('click', () => { inputBuffer.push('MATH:.'); updateDisplay(); });
+    funcRow.appendChild(dotBtn);
+  }
+
+  // Space (수학 모드에서는 =계산)
+  const spaceBtn = document.createElement('div');
+  spaceBtn.className = 'key func';
+  spaceBtn.style.width = currentLang === 'math' ? '150px' : '250px';
+  spaceBtn.innerHTML = `<div class="main">${currentLang === 'math' ? '= 계산' : 'Space'}</div>`;
+  spaceBtn.addEventListener('click', () => {
+    if (currentLang === 'math') { mathEvaluate(); }
+    else { inputBuffer.push(' '); updateDisplay(); }
+  });
+  funcRow.appendChild(spaceBtn);
+
+  // ⌫ 백스페이스
+  const bsBtn = document.createElement('div');
+  bsBtn.className = 'key func';
+  bsBtn.style.width = '80px';
+  bsBtn.innerHTML = `<div class="main">⌫</div>`;
+  bsBtn.addEventListener('click', () => { inputBuffer.pop(); updateDisplay(); });
+  funcRow.appendChild(bsBtn);
+
+  container.appendChild(funcRow);
+}
+
+// ═══ 언어 전환 ═══
+// 🌐 혼자 = 한↔영 토글
+// 🌐+1~6 = 직접 언어 선택 (Shift+C처럼)
+let globeHeld = false;
+
+function switchLanguage() {
+  // 🌐 클릭 (마우스) = 한↔영 토글
+  if (currentLang === 'ko') {
+    selectLanguage('en');
+  } else if (currentLang === 'en') {
+    selectLanguage('ko');
+  } else {
+    selectLanguage('ko');  // 다른 언어에서는 한국어로
+  }
+}
+
+function selectLanguage(lang) {
+  currentLang = lang;
+  document.getElementById('current-lang').textContent =
+    LANG_FLAGS[lang] + ' ' + LANG_NAMES[lang];
+  buildKeyboard();
+  updateDisplay();
+  updateBrailleVisibility();
+  // 전환 피드백: 버튼 깜빡
+  const btn = document.getElementById('lang-switch-btn');
+  if (btn) {
+    btn.style.background = '#F0C040';
+    btn.querySelector('.main').style.color = '#000';
+    setTimeout(() => {
+      btn.style.background = '#2A1A38';
+      btn.querySelector('.main').style.color = '';
+    }, 200);
+  }
+}
+
+// ═══ QWERTY → 화상키보드 매핑 (물리 키보드 연동) ═══
+const QWERTY_TO_KEYID = {
+  'q':'k_b','w':'k_j','e':'k_d','r':'k_g','t':'k_s',
+  'y':'k_yo','u':'k_yeo','i':'k_ya','o':'k_ae','p':'k_e',
+  'a':'k_m','s':'k_n','d':'k_ng','f':'k_r','g':'k_h',
+  'h':'k_o','j':'k_eo','k':'k_a','l':'k_i',
+  'z':'k_k','x':'k_t','c':'k_ch','v':'k_p',
+  'b':'k_yu','n':'k_u','m':'k_eu',
+};
+
+// 키보드: 한/영 키(또는 `) = 토글, 한/영+숫자 = 직접 선택, QWERTY = 입력
+document.addEventListener('keydown', (e) => {
+  // 한/영키 감지
+  if (e.key === 'HangulMode' || e.key === 'Lang1' || e.code === 'Backquote') {
+    e.preventDefault();
+    globeHeld = true;
+    return;
+  }
+  // 🌐 + 숫자 = 언어 직접 선택
+  if (globeHeld && e.key >= '1' && e.key <= '9') {
+    e.preventDefault();
+    const idx = parseInt(e.key) - 1;
+    if (LANGUAGES[idx]) selectLanguage(LANGUAGES[idx]);
+    globeHeld = false;
+    return;
+  }
+
+  // 수학/화학 모드: 코드 패널 열려있으면 숫자로 선택
+  if ((currentLang === 'math' || currentLang === 'chem') && mathCodeBuffer.length > 0 && e.key >= '1' && e.key <= '9') {
+    e.preventDefault();
+    const DB = getActiveCodeDB() || {};
+    const allMatches = Object.entries(DB)
+      .filter(([code]) => code.startsWith(mathCodeBuffer))
+      .sort((a, b) => (b[0] === mathCodeBuffer ? 1 : 0) - (a[0] === mathCodeBuffer ? 1 : 0));
+    const pageStart = mathCodePageIdx * MATH_PAGE_SIZE;
+    const idx = pageStart + (parseInt(e.key) - 1);
+    if (idx < allMatches.length) {
+      selectMathCode(allMatches[idx][0]);
+    }
+    return;
+  }
+
+  // 수학/화학 모드: 코드 패널 안 열려있으면 숫자/연산자 직접 입력
+  if ((currentLang === 'math' || currentLang === 'chem') && !globeHeld && mathCodeBuffer.length === 0) {
+    const mathDirect = {
+      '0':'0','1':'1','2':'2','3':'3','4':'4','5':'5','6':'6','7':'7','8':'8','9':'9',
+      '.':'.', '+':'+', '-':'−', '*':'×', '/':'÷', '(':'(', ')':')',
+      '=':'=', '^':'^',
+    };
+    if (mathDirect[e.key]) {
+      e.preventDefault();
+      inputBuffer.push('MATH:' + mathDirect[e.key]);
+      updateDisplay();
+      return;
+    }
+  }
+
+  // 중국어 모드: 숫자키로 창힐 후보 선택
+  if (currentLang === 'zh' && cangjieBuffer.length > 0 && e.key >= '1' && e.key <= '9') {
+    e.preventDefault();
+    const idx = cangjiePageIdx * CANGJIE_PAGE_SIZE + (parseInt(e.key) - 1);
+    if (idx < cangjieMatches.length) selectCangjie(idx);
+    return;
+  }
+
+  // 물리 키보드 → 화상키보드 연동
+  const lower = e.key.toLowerCase();
+  if (QWERTY_TO_KEYID[lower] && !e.ctrlKey && !e.altKey && !e.metaKey) {
+    e.preventDefault();
+    const keyId = QWERTY_TO_KEYID[lower];
+    // 화상키보드 버튼 눌림 애니메이션
+    const btn = document.querySelector(`[data-key-id="${keyId}"]`);
+    if (btn) {
+      btn.classList.add('pressed');
+      setTimeout(() => btn.classList.remove('pressed'), 150);
+    }
+    pressKey(keyId);
+    return;
+  }
+
+  // Space = 모드별 특수 동작
+  if (e.key === ' ' || e.code === 'Space') {
+    e.preventDefault();
+    if (currentLang === 'zh' && cangjieBuffer.length > 0) {
+      cangjieNextPage();
+    } else if ((currentLang === 'math' || currentLang === 'chem') && mathCodeBuffer.length > 0) {
+      // 코드 확정 또는 다음 페이지
+      if (!mathCodeConfirm()) {
+        mathCodeNextPage();
+      }
+    } else if (currentLang === 'math') {
+      mathEvaluate();  // 수학 모드: 계산 실행
+    } else {
+      pressKey(' ');
+    }
+    return;
+  }
+  // Backspace = 중국어 모드에서 창힐 코드 삭제, 아니면 일반 삭제
+  if (e.key === 'Backspace') {
+    e.preventDefault();
+    if (currentLang === 'zh' && cangjieBuffer.length > 0) {
+      inputBuffer.pop();
+      cangjieBackspace();
+      updateDisplay();
+    } else if ((currentLang === 'math' || currentLang === 'chem') && mathCodeBuffer.length > 0) {
+      inputBuffer.pop();
+      mathCodeBackspace();
+      updateDisplay();
+    } else if (inputBuffer.length > 0) {
+      inputBuffer.pop();
+      updateDisplay();
+    }
+    return;
+  }
+  // Enter = 클립보드 복사 + 버퍼 초기화 (연속 입력용)
+  // Ctrl+Enter = 복사 + 자동 붙여넣기 (앱 최소화 → Ctrl+V)
+  if (e.key === 'Enter') {
+    e.preventDefault();
+    const display = document.getElementById('kb-display');
+    if (display) {
+      const text = display.textContent || display.innerText;
+      if (!text || text === '_') return;
+      navigator.clipboard.writeText(text).then(() => {
+        const indicator = document.getElementById('copy-indicator');
+        if (indicator) { indicator.textContent = '📋 Copied!'; setTimeout(() => indicator.textContent = '', 1500); }
+        // 버퍼 초기화 — 다음 입력 준비
+        inputBuffer = [];
+        if (currentLang === 'zh') { cangjieBuffer = ''; cangjieMatches = []; hideCangjiePanel(); }
+        updateDisplay();
+
+        // Ctrl+Enter: pywebview API로 자동 붙여넣기 요청
+        if (e.ctrlKey && window.pywebview && window.pywebview.api) {
+          window.pywebview.api.auto_paste();
+        }
+      });
+    }
+    return;
+  }
+});
+
+document.addEventListener('keyup', (e) => {
+  if (e.key === 'HangulMode' || e.key === 'Lang1' || e.code === 'Backquote') {
+    if (globeHeld) {
+      switchLanguage();
+      globeHeld = false;
+    }
+  }
+  // 물리 키보드 버튼 눌림 해제
+  const lower = e.key.toLowerCase();
+  if (QWERTY_TO_KEYID[lower]) {
+    const keyId = QWERTY_TO_KEYID[lower];
+    const btn = document.querySelector(`[data-key-id="${keyId}"]`);
+    if (btn) btn.classList.remove('pressed');
+  }
+});
+
+// ═══ 한글 자모 조합 엔진 ═══
+// Unicode: 음절 = 0xAC00 + (초성×21 + 중성)×28 + 종성
+const CHO = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const JUNG = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+const JONG = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+
+function composeHangul(jamos) {
+  // 자모 배열 → 합성 음절 문자열
+  let result = '';
+  let i = 0;
+  while (i < jamos.length) {
+    const c = jamos[i];
+    const choIdx = CHO.indexOf(c);
+
+    // 초성이면 → 모음 찾기
+    if (choIdx >= 0 && i + 1 < jamos.length) {
+      const v = jamos[i + 1];
+      const jungIdx = JUNG.indexOf(v);
+
+      if (jungIdx >= 0) {
+        // 초성 + 중성 확인. 종성 있는지 체크
+        let jongIdx = 0;
+
+        if (i + 2 < jamos.length) {
+          const nextC = jamos[i + 2];
+          const possibleJong = JONG.indexOf(nextC);
+
+          if (possibleJong > 0) {
+            // 다음이 또 모음이면 → 이 자음은 다음 음절의 초성
+            if (i + 3 < jamos.length && JUNG.indexOf(jamos[i + 3]) >= 0) {
+              // 종성 없이 합성
+              jongIdx = 0;
+            } else {
+              // 종성으로 사용
+              jongIdx = possibleJong;
+              i++; // 종성 소비
+            }
+          }
+        }
+
+        const code = 0xAC00 + (choIdx * 21 + jungIdx) * 28 + jongIdx;
+        result += String.fromCharCode(code);
+        i += 2; // 초성+중성 소비
+        continue;
+      }
+    }
+
+    // 모음 단독 (초성 ㅇ 없이)
+    const jungAlone = JUNG.indexOf(c);
+    if (jungAlone >= 0) {
+      // ㅇ(무음) + 모음으로 합성
+      const code = 0xAC00 + (11 * 21 + jungAlone) * 28;
+      result += String.fromCharCode(code);
+      i++;
+      continue;
+    }
+
+    // 자음 단독
+    result += c;
+    i++;
+  }
+  return result;
+}
+
+// ═══ 중국어 병음→한자 (성조 4개 후보) ═══
+// {병음: [1성, 2성, 3성, 4성]}
+// ═══ 창힐(倉頡) 입력 시스템 ═══
+// cangjie5.json: {code: [char, char, ...]} — 64,912개
+let CANGJIE_DATA = {};  // 로드 후 채워짐
+let cangjieBuffer = ''; // 현재 입력 중인 창힐 코드 (a~y)
+let cangjieMatches = []; // 현재 후보 목록
+let cangjiePageIdx = 0;  // 후보 페이지
+const CANGJIE_PAGE_SIZE = 9; // 1~9 숫자키
+
+// 창힐 코드 → 부수 이름 (키보드에 표시용)
+const CANGJIE_RADICALS = {
+  a:'日',b:'月',c:'金',d:'木',e:'水',f:'火',g:'土',h:'竹',i:'戈',j:'十',
+  k:'大',l:'中',m:'一',n:'弓',o:'人',p:'心',q:'手',r:'口',s:'尸',t:'廿',
+  u:'山',v:'女',w:'田',x:'難',y:'卜'
+};
+
+// 데이터 로드 (HTML과 같은 폴더의 ../data/)
+async function loadCangjieData() {
+  try {
+    const resp = await fetch('../data/cangjie5.json');
+    CANGJIE_DATA = await resp.json();
+    console.log(`[창힐] ${Object.keys(CANGJIE_DATA).length}개 코드 로드`);
+  } catch(e) {
+    console.error('[창힐] 데이터 로드 실패:', e);
+  }
+}
+loadCangjieData();
+
+// ═══ 수학 코드 시스템 (창힐과 동일 구조) ═══
+let MATH_CODES = {};
+let mathCodeBuffer = '';
+let mathCodeMatches = [];
+let mathCodePageIdx = 0;
+const MATH_PAGE_SIZE = 9;
+
+// QWERTY → 수학 코드 키 (a~z 그대로 사용)
+const MATH_KEYMAP = {
+  'k_b':'b', 'k_j':'j', 'k_d':'d', 'k_g':'g', 'k_s':'s',
+  'k_yo':'y', 'k_yeo':'u', 'k_ya':'i', 'k_ae':'o', 'k_e':'p',
+  'k_m':'a', 'k_n':'n', 'k_ng':'e', 'k_r':'r', 'k_h':'h',
+  'k_o':'k', 'k_eo':'l', 'k_a':'m', 'k_i':'t',
+  'k_k':'q', 'k_t':'c', 'k_ch':'v', 'k_p':'w',
+  'k_yu':'f', 'k_u':'x', 'k_eu':'z',
+};
+
+// ═══ 범용 코드 엔진 — 수학/화학/모든 분야 공용 ═══
+let CHEM_CODES = {};
+async function loadMathCodes() {
+  try {
+    const resp = await fetch('../data/math_codes.json');
+    MATH_CODES = await resp.json();
+    console.log(`[수학] ${Object.keys(MATH_CODES).length}개 코드 로드`);
+  } catch(e) { console.error('[수학] 로드 실패:', e); }
+}
+async function loadChemCodes() {
+  try {
+    const resp = await fetch('../data/chem_codes.json');
+    CHEM_CODES = await resp.json();
+    console.log(`[화학] ${Object.keys(CHEM_CODES).length}개 코드 로드`);
+  } catch(e) { console.error('[화학] 로드 실패:', e); }
+}
+loadMathCodes();
+loadChemCodes();
+
+// 현재 모드의 코드 DB 반환
+function getActiveCodeDB() {
+  if (currentLang === 'math') return MATH_CODES;
+  if (currentLang === 'chem') return CHEM_CODES;
+
+  return null;
+}
+
+function mathCodeInput(letter) {
+  const newBuffer = mathCodeBuffer + letter;
+  const DB = getActiveCodeDB() || {};
+  console.log('[CODE]', 'letter:', letter, 'buffer:', newBuffer, 'DB keys:', Object.keys(DB).length);
+
+  // 새 버퍼로 매칭 가능한지 확인
+  const hasAny = Object.keys(DB).some(code => code.startsWith(newBuffer));
+
+  if (!hasAny && mathCodeBuffer.length > 0) {
+    // 매칭 없음 → 이전 코드 자동 확정 + 새 코드 시작
+    const exact = DB[mathCodeBuffer];
+    if (exact) {
+      // 이전 버퍼 확정
+      for (let i = 0; i < mathCodeBuffer.length && inputBuffer.length > 0; i++) inputBuffer.pop();
+      inputBuffer.push('MATH:' + (Array.isArray(exact) ? exact[0] : exact));
+    }
+    // 새 글자로 재시작
+    mathCodeBuffer = letter;
+    mathCodePageIdx = 0;
+  } else {
+    mathCodeBuffer = newBuffer;
+    mathCodePageIdx = 0;
+  }
+
+  // 정확 매칭 + 접두어 매칭 통합
+  const allMatches = Object.entries(DB)
+    .filter(([code]) => code.startsWith(mathCodeBuffer))
+    .map(([code, val]) => ({
+      code,
+      symbol: Array.isArray(val) ? val[0] : val,
+      name: Array.isArray(val) ? val[1] || '' : '',
+      exact: code === mathCodeBuffer,
+    }))
+    .sort((a, b) => (b.exact ? 1 : 0) - (a.exact ? 1 : 0)); // exact 먼저
+
+  console.log('[CODE] allMatches:', allMatches.length, allMatches.slice(0,3).map(m=>m.code+':'+m.symbol));
+  showMathCodePanel(allMatches);
+}
+
+function mathCodeBackspace() {
+  if (mathCodeBuffer.length > 0) {
+    mathCodeBuffer = mathCodeBuffer.slice(0, -1);
+    mathCodePageIdx = 0;
+    if (mathCodeBuffer.length > 0) {
+      const DB = getActiveCodeDB() || {};
+      const allMatches = Object.entries(DB)
+        .filter(([code]) => code.startsWith(mathCodeBuffer))
+        .map(([code, val]) => ({
+          code, symbol: Array.isArray(val) ? val[0] : val,
+          name: Array.isArray(val) ? val[1] || '' : '',
+          exact: code === mathCodeBuffer,
+        }))
+        .sort((a, b) => (b.exact ? 1 : 0) - (a.exact ? 1 : 0));
+      showMathCodePanel(allMatches);
+    } else {
+      hideMathCodePanel();
+    }
+  }
+}
+
+function showMathCodePanel(prefixMatches) {
+  let panel = document.getElementById('mathcode-panel');
+  const pColor = currentLang === 'chem' ? '#2196F3' : '#4CAF50';
+  const pGlow = currentLang === 'chem' ? 'rgba(33,150,243,0.3)' : 'rgba(76,175,80,0.3)';
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'mathcode-panel';
+    document.body.appendChild(panel);
+  }
+  panel.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);' +
+    `background:#1A1A28;border:2px solid ${pColor};border-radius:12px;padding:15px 20px;z-index:500;` +
+    `box-shadow:0 0 30px ${pGlow};min-width:400px;max-width:700px;`;
+
+  if (mathCodeBuffer.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+
+  // 정확 매칭 — 현재 모드의 DB 사용
+  const DB_PANEL = getActiveCodeDB() || {};
+  const exact = DB_PANEL[mathCodeBuffer];
+  const exactSymbol = exact ? (Array.isArray(exact) ? exact[0] : exact) : null;
+  const exactName = exact ? (Array.isArray(exact) ? exact[1] || '' : '') : '';
+  const color = currentLang === 'chem' ? '#2196F3' : '#4CAF50';
+  const modeName = currentLang === 'chem' ? '화학' : '수학';
+
+  // 페이지
+  const pageStart = mathCodePageIdx * MATH_PAGE_SIZE;
+  const pageCands = prefixMatches.slice(pageStart, pageStart + MATH_PAGE_SIZE);
+  const totalPages = Math.ceil(prefixMatches.length / MATH_PAGE_SIZE);
+
+  panel.innerHTML = `
+    <div style="color:${color};font-size:0.85em;margin-bottom:8px;">
+      ${modeName}: <b>${mathCodeBuffer}</b>
+      ${exactSymbol ? ` → <span style="font-size:1.5em;">${exactSymbol}</span> ${exactName} (Space=입력)` : ''}
+      ${totalPages > 1 ? ` | ${mathCodePageIdx+1}/${totalPages}페이지` : ''}
+    </div>
+    <div style="display:flex;gap:6px;flex-wrap:wrap;">
+      ${pageCands.map((m, i) =>
+        `<div onclick="selectMathCode('${m.code}')" style="text-align:center;padding:6px 10px;border-radius:6px;
+          cursor:pointer;border:1px solid ${m.exact ? color : '#333'};transition:all 0.2s;min-width:60px;font-size:0.85em;
+          ${m.exact ? 'background:#1A2A1A;' : ''}"
+          onmouseenter="this.style.borderColor='${color}';this.style.background='#1A2A1A'"
+          onmouseleave="this.style.borderColor='${m.exact ? color : '#333'}';this.style.background='${m.exact ? '#1A2A1A' : 'transparent'}'">
+          <div style="font-size:0.65em;color:${color};">${i+1}${m.exact ? ' ✓' : ''}</div>
+          <div style="font-size:1.5em;">${m.symbol}</div>
+          <div style="color:${color};font-size:0.7em;">${m.code}</div>
+          <div style="color:#555;font-size:0.6em;">${m.name}</div>
+        </div>`
+      ).join('') || '<div style="color:#666;">계속 입력...</div>'}
+    </div>`;
+  panel.style.display = 'block';
+}
+
+function selectMathCode(code) {
+  const DB = getActiveCodeDB() || {};
+  const val = DB[code];
+  const symbol = Array.isArray(val) ? val[0] : val;
+  // 버퍼에서 입력된 키 제거
+  for (let i = 0; i < mathCodeBuffer.length && inputBuffer.length > 0; i++) {
+    inputBuffer.pop();
+  }
+  inputBuffer.push('MATH:' + symbol);
+  mathCodeBuffer = '';
+  mathCodeMatches = [];
+  mathCodePageIdx = 0;
+  hideMathCodePanel();
+  updateDisplay();
+}
+
+function mathCodeConfirm() {
+  const DB = getActiveCodeDB() || {};
+  const exact = DB[mathCodeBuffer];
+  if (exact) {
+    selectMathCode(mathCodeBuffer);
+    return true;
+  }
+  return false;
+}
+
+function mathCodeNextPage() {
+  const DB = getActiveCodeDB() || {};
+  const total = Object.keys(DB).filter(c => c.startsWith(mathCodeBuffer)).length;
+  const totalPages = Math.ceil(total / MATH_PAGE_SIZE);
+  if (totalPages > 1) {
+    mathCodePageIdx = (mathCodePageIdx + 1) % totalPages;
+    const DB2 = getActiveCodeDB() || {};
+    const prefixMatches = Object.entries(DB2)
+      .filter(([code]) => code.startsWith(mathCodeBuffer))
+      .map(([code, val]) => ({code, symbol: Array.isArray(val) ? val[0] : val, name: Array.isArray(val) ? val[1] : ''}));
+    showMathCodePanel(prefixMatches);
+  }
+}
+
+function hideMathCodePanel() {
+  const panel = document.getElementById('mathcode-panel');
+  if (panel) panel.style.display = 'none';
+  mathCodeBuffer = '';
+  mathCodeMatches = [];
+  mathCodePageIdx = 0;
+}
+
+// 창힐 코드 입력 → 후보 조회 → 패널 표시
+function cangjieInput(code) {
+  cangjieBuffer += code;
+  cangjiePageIdx = 0;
+  // 정확 매칭
+  cangjieMatches = CANGJIE_DATA[cangjieBuffer] || [];
+  showCangjiePanel();
+}
+
+function cangjieBackspace() {
+  if (cangjieBuffer.length > 0) {
+    cangjieBuffer = cangjieBuffer.slice(0, -1);
+    cangjiePageIdx = 0;
+    if (cangjieBuffer.length > 0) {
+      cangjieMatches = CANGJIE_DATA[cangjieBuffer] || [];
+    } else {
+      cangjieMatches = [];
+    }
+    showCangjiePanel();
+  }
+}
+
+function showCangjiePanel() {
+  let panel = document.getElementById('cangjie-panel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'cangjie-panel';
+    panel.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);' +
+      'background:#1A1A28;border:2px solid #F0C040;border-radius:12px;padding:15px 20px;z-index:500;' +
+      'box-shadow:0 0 30px rgba(240,192,64,0.3);min-width:400px;';
+    document.body.appendChild(panel);
+  }
+
+  if (cangjieBuffer.length === 0) {
+    panel.style.display = 'none';
+    return;
+  }
+
+  // 부수 표시
+  const radicalStr = cangjieBuffer.split('').map(c => CANGJIE_RADICALS[c] || c).join('');
+  const pageStart = cangjiePageIdx * CANGJIE_PAGE_SIZE;
+  const pageCands = cangjieMatches.slice(pageStart, pageStart + CANGJIE_PAGE_SIZE);
+  const totalPages = Math.ceil(cangjieMatches.length / CANGJIE_PAGE_SIZE);
+
+  panel.innerHTML = `
+    <div style="color:#F0C040;font-size:0.85em;margin-bottom:8px;">
+      倉頡: <b>${radicalStr}</b> (${cangjieBuffer}) — ${cangjieMatches.length}자
+      ${totalPages > 1 ? ` | 페이지 ${cangjiePageIdx+1}/${totalPages} (Space=다음)` : ''}
+    </div>
+    <div style="display:flex;gap:8px;flex-wrap:wrap;">
+      ${pageCands.length > 0 ? pageCands.map((ch, i) =>
+        `<div onclick="selectCangjie(${pageStart + i})" style="text-align:center;padding:8px 12px;border-radius:8px;
+          cursor:pointer;border:1px solid #333;transition:all 0.2s;min-width:55px;"
+          onmouseenter="this.style.borderColor='#F0C040';this.style.background='#2A1A38'"
+          onmouseleave="this.style.borderColor='#333';this.style.background='transparent'">
+          <div style="color:#F0C040;font-size:0.7em;">${i+1}</div>
+          <div style="font-size:2em;">${ch}</div>
+        </div>`
+      ).join('') : '<div style="color:#666;">후보 없음 — 계속 입력</div>'}
+    </div>`;
+  panel.style.display = 'block';
+}
+
+function selectCangjie(idx) {
+  if (idx < 0 || idx >= cangjieMatches.length) return;
+  const hanzi = cangjieMatches[idx];
+
+  // 창힐 코드에 해당하는 키들을 inputBuffer에서 제거
+  for (let i = 0; i < cangjieBuffer.length && inputBuffer.length > 0; i++) {
+    inputBuffer.pop();
+  }
+  // 한자 삽입
+  inputBuffer.push('ZH_CHAR:' + hanzi);
+
+  cangjieBuffer = '';
+  cangjieMatches = [];
+  cangjiePageIdx = 0;
+  hideCangjiePanel();
+  updateDisplay();
+}
+
+function cangjieNextPage() {
+  const totalPages = Math.ceil(cangjieMatches.length / CANGJIE_PAGE_SIZE);
+  if (totalPages > 1) {
+    cangjiePageIdx = (cangjiePageIdx + 1) % totalPages;
+    showCangjiePanel();
+  }
+}
+
+function hideCangjiePanel() {
+  const panel = document.getElementById('cangjie-panel');
+  if (panel) panel.style.display = 'none';
+  cangjieBuffer = '';
+  cangjieMatches = [];
+  cangjiePageIdx = 0;
+}
+
+// ═══ 수학 모드 — 수식 합성 + 실시간 계산 ═══
+function composeMath(symbols) {
+  // 수학 부호를 이어붙임 (MATH: 접두어 처리)
+  return symbols.map(s => {
+    if (typeof s === 'string' && s.startsWith('MATH:')) return s.substring(5);
+    return s;
+  }).join('');
+}
+
+// 수학 모드: Space 누르면 계산 실행
+function mathEvaluate() {
+  const display = document.getElementById('kb-display');
+  if (!display) return;
+  const expr = display.textContent || '';
+  if (!expr || expr === '_') return;
+
+  // 수학 표기 → JS 표기 변환
+  let jsExpr = expr
+    .replace(/×/g, '*')
+    .replace(/÷/g, '/')
+    .replace(/−/g, '-')
+    .replace(/\^/g, '**')
+    .replace(/√(\d+)/g, 'Math.sqrt($1)')
+    .replace(/√\(([^)]+)\)/g, 'Math.sqrt($1)')
+    .replace(/π/g, 'Math.PI')
+    .replace(/(?<![a-zA-Z])e(?![a-zA-Z])/g, 'Math.E')
+    .replace(/Σ/g, '')  // 시그마는 별도 처리
+    .replace(/∫/g, '')  // 적분은 별도 처리
+    .replace(/∂/g, '')  // 편미분은 별도 처리
+    .replace(/±/g, '')  // 플마는 별도 처리
+
+  try {
+    // 안전한 평가 (Function 사용, eval 회피)
+    const result = new Function('x', 'return ' + jsExpr)(0);
+    if (typeof result === 'number' && isFinite(result)) {
+      // 결과를 패널로 표시
+      showMathResult(expr, result);
+    }
+  } catch(e) {
+    // 계산 불가 — 수식만 표시 (에러 무시)
+  }
+}
+
+function showMathResult(expr, result) {
+  let panel = document.getElementById('math-panel');
+  if (!panel) {
+    panel = document.createElement('div');
+    panel.id = 'math-panel';
+    panel.style.cssText = 'position:fixed;bottom:100px;left:50%;transform:translateX(-50%);' +
+      'background:#1A1A28;border:2px solid #4CAF50;border-radius:12px;padding:15px 25px;z-index:500;' +
+      'box-shadow:0 0 30px rgba(76,175,80,0.3);text-align:center;min-width:300px;';
+    document.body.appendChild(panel);
+  }
+  // 정수면 정수, 아니면 소수점 6자리
+  const dispResult = Number.isInteger(result) ? result : result.toFixed(6);
+  panel.innerHTML = `
+    <div style="color:#888;font-size:0.8em;">수식</div>
+    <div style="font-size:1.5em;margin:5px 0;color:#4CAF50;">${expr}</div>
+    <div style="color:#888;font-size:0.8em;">결과</div>
+    <div style="font-size:2.5em;font-weight:bold;color:#fff;">${dispResult}</div>
+    <div style="color:#555;font-size:0.7em;margin-top:8px;">Space=계산 | Enter=복사</div>`;
+  panel.style.display = 'block';
+}
+
+function hideMathPanel() {
+  const panel = document.getElementById('math-panel');
+  if (panel) panel.style.display = 'none';
+}
+
+// ═══ 일본어 가나 조합 ═══
+// 자음+모음 → 가나 음절
+const JA_SYLLABLE = {
+  'かあ':'かあ','かい':'かい',
+  // 기본: 이미 KB_KEYS에 음절 단위로 매핑되어 있으므로
+  // 연속 가나를 그대로 이어붙이면 됨
+};
+
+function composeLang(jamos, lang) {
+  // ZH_CHAR: 접두어 처리 — 모든 언어 공통
+  // 한자가 섞여있으면 한자는 그대로, 나머지만 언어별 합성
+  const normalJamos = [];
+  let result = '';
+  for (const j of jamos) {
+    if (typeof j === 'string' && j.startsWith && (j.startsWith('ZH_CHAR:') || j.startsWith('MATH:'))) {
+      // 앞에 쌓인 일반 자모 먼저 합성
+      if (normalJamos.length > 0) {
+        result += _composePure(normalJamos, lang);
+        normalJamos.length = 0;
+      }
+      // 접두어 제거하고 부호/한자 그대로
+      const colonIdx = j.indexOf(':');
+      result += j.substring(colonIdx + 1);
+    } else {
+      normalJamos.push(j);
+    }
+  }
+  if (normalJamos.length > 0) {
+    result += _composePure(normalJamos, lang);
+  }
+  return result;
+}
+
+function _composePure(jamos, lang) {
+  if (lang === 'ko') return composeHangul(jamos);
+  if (lang === 'braille') {
+    // 메인 디스플레이 = 점자
+    if (brailleSubLang === 'en') return toBrailleEn(jamos.join(''));
+    return toBrailleKo(composeHangul(jamos));
+  }
+  if (lang === 'zh') return ''; // 조합 중 부호는 패널에서 보여줌
+  if (lang === 'math' || lang === 'chem') {
+    // 코드 조합 중인 키는 표시하지 않음 (마지막 N개 = mathCodeBuffer 길이)
+    if (mathCodeBuffer.length > 0) {
+      const confirmed = jamos.slice(0, jamos.length - mathCodeBuffer.length);
+      return composeMath(confirmed);
+    }
+    return composeMath(jamos);
+  }
+  return jamos.join('');
 }
 
 // ═══ 키보드 입력 ═══
 let inputBuffer = [];
-const display = () => document.getElementById('kb-display');
 
-function pressKey(phoneme) {
-  inputBuffer.push(phoneme);
-  display().textContent = inputBuffer.join('');
-  updateOutputs(inputBuffer);
+function pressKey(keyId) {
+  // Space
+  if (keyId === ' ') {
+    inputBuffer.push(' ');
+    updateDisplay();
+    return;
+  }
+  const kDef = KB_KEYS.find(k => k.id === keyId);
+  if (!kDef) return;
+
+  // 중국어 모드: 창힐 코드 입력
+  if (currentLang === 'zh') {
+    const zhCode = kDef.zhCode || '';
+    if (zhCode) {
+      inputBuffer.push(keyId);
+      cangjieInput(zhCode);
+      updateDisplay();
+    }
+    return;
+  }
+
+  // 수학/화학 모드: 코드 조합 (창힐과 동일 구조)
+  if (currentLang === 'math' || currentLang === 'chem') {
+    const codeKey = MATH_KEYMAP[keyId];
+    if (codeKey) {
+      inputBuffer.push(keyId);
+      mathCodeInput(codeKey);
+      updateDisplay();
+    }
+    return;
+  }
+
+  // 창힐/수학 패널 열려있으면 닫기
+  hideCangjiePanel();
+  hideMathCodePanel();
+  inputBuffer.push(keyId);
+  updateDisplay();
 }
 
-function updateOutputs(buffer) {
-  const text = buffer.join('');
-  const langs = ['ko','en','ja','zh','ar','ru'];
+function updateDisplay() {
+  const display = document.getElementById('kb-display');
 
-  langs.forEach(lang => {
+  // 각 언어별 음소 배열 추출 후 합성
+  LANGUAGES.forEach(lang => {
+    const phonemes = inputBuffer.map(kid => {
+      if (kid === ' ') return ' ';
+      if (kid.startsWith && kid.startsWith('ZH_CHAR:')) return kid;
+      if (kid.startsWith && kid.startsWith('MATH:')) return kid;  // 수학 부호 그대로
+      const k = KB_KEYS.find(x => x.id === kid);
+      const effLang = (lang === 'braille') ? brailleSubLang : lang;
+      return k ? k[effLang] || kid : kid;
+    });
+
+    // 공백으로 분리 → 각 단어별 합성 → 다시 합치기
+    let composed = '';
+    let wordBuf = [];
+    phonemes.forEach(p => {
+      if (p === ' ') {
+        if (wordBuf.length) composed += composeLang(wordBuf, lang);
+        composed += ' ';
+        wordBuf = [];
+      } else {
+        wordBuf.push(p);
+      }
+    });
+    if (wordBuf.length) composed += composeLang(wordBuf, lang);
+
+    // 현재 언어 → 메인 디스플레이
+    if (lang === currentLang) {
+      display.textContent = composed || '_';
+    }
+
+    // 점자 모드: 아래 영역에 원본 표시
+    if (lang === 'braille' && currentLang === 'braille') {
+      const brOut = document.getElementById('braille-output');
+      if (brOut) {
+        // 원본 = 서브언어로 합성한 텍스트
+        const srcPhonemes = inputBuffer.map(kid => {
+          if (kid === ' ') return ' ';
+          if (typeof kid === 'string' && kid.startsWith && kid.startsWith('MATH:')) return kid.substring(5);
+          const k = KB_KEYS.find(x => x.id === kid);
+          return k ? k[brailleSubLang] || kid : kid;
+        });
+        let srcText = '';
+        let wb = [];
+        srcPhonemes.forEach(p => {
+          if (p === ' ') { if (wb.length) srcText += composeLang(wb, brailleSubLang); srcText += ' '; wb = []; }
+          else { wb.push(p); }
+        });
+        if (wb.length) srcText += composeLang(wb, brailleSubLang);
+        brOut.textContent = srcText || '';
+      }
+    }
+
+    // 출력 카드
     const el = document.getElementById(`out-${lang}`);
-    if (!el) return;
-
-    // 음소별 변환
-    const converted = buffer.map(p => {
-      const map = PHONEME_MAP[p];
-      return map ? map[lang] : p;
-    }).join('');
-
-    el.textContent = converted;
+    if (el) {
+      el.textContent = composed;
+      el.parentElement.style.borderColor = (lang === currentLang) ? '#F0C040' : '#222';
+    }
   });
 }
 
@@ -622,9 +1432,152 @@ function setupModeButtons() {
       const modeId = `mode-${btn.dataset.mode}`;
       const modeEl = document.getElementById(modeId);
       if (modeEl) modeEl.classList.add('active');
+      // 세팅 모드 진입 시 에디터 빌드
+      if (btn.dataset.mode === 'settings') buildSlotEditor();
     });
   });
 }
+
+// ═══ 세팅 — 언어 슬롯 편집 ═══
+const ALL_LANGUAGES = [
+  {code:'ko',name:'Korean',flag:'🇰🇷'}, {code:'en',name:'English',flag:'🇺🇸'},
+  {code:'ja',name:'日本語',flag:'🇯🇵'}, {code:'zh',name:'中文',flag:'🇨🇳'},
+  {code:'ar',name:'العربية',flag:'🇸🇦'}, {code:'ru',name:'Русский',flag:'🇷🇺'},
+  {code:'math',name:'수학',flag:'∑'}, {code:'chem',name:'화학',flag:'⚗'}, {code:'braille',name:'점자',flag:'⠿'},
+  {code:'hi',name:'हिन्दी',flag:'🇮🇳'}, {code:'th',name:'ไทย',flag:'🇹🇭'},
+  {code:'vi',name:'Tiếng Việt',flag:'🇻🇳'}, {code:'de',name:'Deutsch',flag:'🇩🇪'},
+  {code:'fr',name:'Français',flag:'🇫🇷'}, {code:'es',name:'Español',flag:'🇪🇸'},
+  {code:'pt',name:'Português',flag:'🇧🇷'}, {code:'it',name:'Italiano',flag:'🇮🇹'},
+  {code:'tr',name:'Türkçe',flag:'🇹🇷'}, {code:'pl',name:'Polski',flag:'🇵🇱'},
+  {code:'uk',name:'Українська',flag:'🇺🇦'}, {code:'id',name:'Bahasa Indonesia',flag:'🇮🇩'},
+  {code:'ms',name:'Bahasa Melayu',flag:'🇲🇾'}, {code:'tl',name:'Filipino',flag:'🇵🇭'},
+  {code:'sw',name:'Kiswahili',flag:'🇰🇪'}, {code:'bn',name:'বাংলা',flag:'🇧🇩'},
+];
+
+// 현재 슬롯 (수정 가능)
+let langSlots = [...LANGUAGES];  // ['ko','en','ja','zh','ar','ru']
+
+function buildSlotEditor() {
+  const editor = document.getElementById('slot-editor');
+  if (!editor) return;
+  editor.innerHTML = '';
+
+  langSlots.forEach((slotLang, i) => {
+    const card = document.createElement('div');
+    card.className = 'output-card';
+    card.style.cssText = 'padding:20px;text-align:center;border:2px solid #333;transition:all 0.3s;';
+    card.id = `slot-card-${i}`;
+
+    const info = ALL_LANGUAGES.find(l => l.code === slotLang) || {code:slotLang, name:slotLang, flag:'🌐'};
+
+    // 슬롯 번호 + 현재 언어
+    let html = `<div style="color:#F0C040;font-size:0.8em;margin-bottom:8px;">🌐 + ${i+1}</div>`;
+    html += `<div style="font-size:2.5em;margin:5px 0;" id="slot-flag-${i}">${info.flag}</div>`;
+
+    // 마지막 슬롯 = 점자 고정 + 서브언어 선택
+    if (i === langSlots.length - 1) {
+      html += `<div style="padding:4px 8px;border-radius:8px;border:1px solid #E040A0;
+        background:#1A1A28;color:#E040A0;font-size:0.75em;margin-top:4px;">⠿ 점자 (고정)</div>`;
+      html += `<select id="braille-sublang-select" onchange="onBrailleSubLangChange()" style="
+        width:100%;padding:6px;border-radius:8px;border:1px solid #E040A0;
+        background:#1A1A28;color:#E040A0;font-size:0.85em;margin-top:6px;cursor:pointer;">
+        <option value="ko" ${brailleSubLang==='ko'?'selected':''}>🇰🇷 한국 점자</option>
+        <option value="en" ${brailleSubLang==='en'?'selected':''}>🇺🇸 English Braille</option>
+        <option value="ja" disabled>🇯🇵 日本 点字 (준비중)</option>
+        <option value="zh" disabled>🇨🇳 中国 盲文 (준비중)</option>
+        <option value="ar" disabled>🇸🇦 عربي (준비중)</option>
+      </select>`;
+      html += `<input type="hidden" id="slot-select-${i}" value="braille">`;
+    } else {
+      // 드롭다운 (braille 제외)
+      html += `<select id="slot-select-${i}" onchange="onSlotChange(${i})" style="
+        width:100%;padding:8px;border-radius:8px;border:1px solid #555;
+        background:#1A1A28;color:#F0C040;font-size:0.9em;margin-top:8px;cursor:pointer;">`;
+      ALL_LANGUAGES.filter(l => l.code !== 'braille').forEach(lang => {
+        const sel = lang.code === slotLang ? 'selected' : '';
+        html += `<option value="${lang.code}" ${sel}>${lang.flag} ${lang.name}</option>`;
+      });
+      html += `</select>`;
+    }
+
+    card.innerHTML = html;
+    editor.appendChild(card);
+  });
+}
+
+function onSlotChange(slotIdx) {
+  const sel = document.getElementById(`slot-select-${slotIdx}`);
+  const newLang = sel.value;
+  const info = ALL_LANGUAGES.find(l => l.code === newLang);
+
+  // 플래그 업데이트
+  const flag = document.getElementById(`slot-flag-${slotIdx}`);
+  if (flag && info) flag.textContent = info.flag;
+
+  // 카드 하이라이트
+  const card = document.getElementById(`slot-card-${slotIdx}`);
+  if (card) {
+    card.style.borderColor = '#F0C040';
+    card.style.boxShadow = '0 0 15px rgba(240,192,64,0.3)';
+    setTimeout(() => {
+      card.style.borderColor = '#333';
+      card.style.boxShadow = 'none';
+    }, 1000);
+  }
+}
+
+function applySlotSettings() {
+  // 드롭다운에서 값 읽기 (마지막 슬롯은 braille 고정)
+  for (let i = 0; i < langSlots.length; i++) {
+    if (i === langSlots.length - 1) { langSlots[i] = 'braille'; continue; }
+    const sel = document.getElementById(`slot-select-${i}`);
+    if (sel) langSlots[i] = sel.value;
+  }
+
+  // LANGUAGES 배열 업데이트
+  LANGUAGES.length = 0;
+  langSlots.forEach(l => LANGUAGES.push(l));
+
+  // LANG_NAMES, LANG_FLAGS 업데이트
+  langSlots.forEach(code => {
+    const info = ALL_LANGUAGES.find(l => l.code === code);
+    if (info) {
+      LANG_NAMES[code] = info.name;
+      LANG_FLAGS[code] = info.flag;
+    }
+  });
+
+  // 키보드 재빌드
+  if (currentLang && !LANGUAGES.includes(currentLang)) {
+    currentLang = LANGUAGES[0];
+  }
+  buildKeyboard();
+  updateDisplay();
+
+  // Apply 버튼 피드백
+  const btn = document.getElementById('settings-apply-btn');
+  if (btn) {
+    btn.textContent = '✓ Applied!';
+    btn.style.background = '#F0C040';
+    btn.style.color = '#000';
+    setTimeout(() => {
+      btn.textContent = '✓ Apply';
+      btn.style.background = '#2A1A38';
+      btn.style.color = '#F0C040';
+    }, 1500);
+  }
+}
+
+function resetSlotSettings() {
+  langSlots = ['ko','en','ja','zh','ar','ru','math','chem','braille'];
+  LANGUAGES.length = 0;
+  langSlots.forEach(l => LANGUAGES.push(l));
+  buildSlotEditor();
+  applySlotSettings();
+}
+
+// 세팅 모드 진입 시 에디터 빌드
+const origSetupModes = setupModeButtons;
 
 // ═══ 진동 토글 ═══
 let vibrationOn = false;
@@ -647,8 +1600,15 @@ document.addEventListener('keydown', (e) => {
     });
   }
 
-  // 숫자 1-5 = 모드 선택 (input/textarea 밖에서만)
-  if (!e.target.matches('input,textarea') && e.key >= '1' && e.key <= '5') {
+  // 병음 후보 열려있으면 1~4 = 성조 선택
+  if (pinyinCandidates && e.key >= '1' && e.key <= '4') {
+    e.preventDefault();
+    selectTone(parseInt(e.key) - 1);
+    return;
+  }
+
+  // 숫자 1-6 = 모드 선택 (input/textarea 밖에서만, 병음 후보 없을 때)
+  if (!e.target.matches('input,textarea') && e.key >= '1' && e.key <= '6') {
     const btns = [...document.querySelectorAll('.mode-btn')];
     const idx = parseInt(e.key) - 1;
     if (btns[idx]) btns[idx].click();
@@ -915,6 +1875,151 @@ function toggleGameSubPos() {
   }
 }
 
+// ═══ 점자 (Braille) 변환 시스템 ═══
+// 글자 입력 → 점자 유니코드 변환 (서브언어별)
+
+// 영문 점자 Grade 1: letter → braille unicode
+const EN_TO_BRAILLE = {
+  'a':'⠁','b':'⠃','c':'⠉','d':'⠙','e':'⠑','f':'⠋','g':'⠛','h':'⠓',
+  'i':'⠊','j':'⠚','k':'⠅','l':'⠇','m':'⠍','n':'⠝','o':'⠕','p':'⠏',
+  'q':'⠟','r':'⠗','s':'⠎','t':'⠞','u':'⠥','v':'⠧','w':'⠺','x':'⠭',
+  'y':'⠽','z':'⠵',
+  'A':'⠠⠁','B':'⠠⠃','C':'⠠⠉','D':'⠠⠙','E':'⠠⠑','F':'⠠⠋','G':'⠠⠛','H':'⠠⠓',
+  'I':'⠠⠊','J':'⠠⠚','K':'⠠⠅','L':'⠠⠇','M':'⠠⠍','N':'⠠⠝','O':'⠠⠕','P':'⠠⠏',
+  'Q':'⠠⠟','R':'⠠⠗','S':'⠠⠎','T':'⠠⠞','U':'⠠⠥','V':'⠠⠧','W':'⠠⠺','X':'⠠⠭',
+  'Y':'⠠⠽','Z':'⠠⠵',
+  '1':'⠼⠁','2':'⠼⠃','3':'⠼⠉','4':'⠼⠙','5':'⠼⠑',
+  '6':'⠼⠋','7':'⠼⠛','8':'⠼⠓','9':'⠼⠊','0':'⠼⠚',
+  ' ':'⠀', '.':'⠲', ',':'⠂', '!':'⠖', '?':'⠦', '-':'⠤',
+};
+
+// 한국 점자 (KS X 6523) — 초성/중성/종성 3테이블
+const KO_CHO_BRAILLE = {
+  'ㄱ':'⠈','ㄴ':'⠉','ㄷ':'⠊','ㄹ':'⠐','ㅁ':'⠑','ㅂ':'⠘',
+  'ㅅ':'⠠','ㅇ':'⠛','ㅈ':'⠨','ㅊ':'⠰','ㅋ':'⠋','ㅌ':'⠓',
+  'ㅍ':'⠙','ㅎ':'⠚',
+  'ㄲ':'⠠⠈','ㄸ':'⠠⠊','ㅃ':'⠠⠘','ㅆ':'⠠⠠','ㅉ':'⠠⠨',
+};
+const KO_JUNG_BRAILLE = {
+  'ㅏ':'⠣','ㅑ':'⠜','ㅓ':'⠎','ㅕ':'⠱','ㅗ':'⠥','ㅛ':'⠬',
+  'ㅜ':'⠍','ㅠ':'⠩','ㅡ':'⠪','ㅣ':'⠕',
+  'ㅐ':'⠗','ㅒ':'⠜⠗','ㅔ':'⠝','ㅖ':'⠜⠝',
+  'ㅘ':'⠥⠣','ㅙ':'⠥⠗','ㅚ':'⠥⠕','ㅝ':'⠍⠎','ㅞ':'⠍⠝','ㅟ':'⠍⠕','ㅢ':'⠪⠕',
+};
+const KO_JONG_BRAILLE = {
+  'ㄱ':'⠁','ㄴ':'⠒','ㄷ':'⠔','ㄹ':'⠂','ㅁ':'⠢','ㅂ':'⠲',
+  'ㅅ':'⠄','ㅇ':'⠶','ㅈ':'⠅','ㅊ':'⠆','ㅋ':'⠖','ㅌ':'⠦',
+  'ㅍ':'⠴','ㅎ':'⠤',
+  'ㄲ':'⠁⠁','ㄳ':'⠁⠄','ㄵ':'⠒⠅','ㄶ':'⠒⠤','ㄺ':'⠂⠁',
+  'ㄻ':'⠂⠢','ㄼ':'⠂⠲','ㄽ':'⠂⠄','ㄾ':'⠂⠦','ㄿ':'⠂⠴',
+  'ㅀ':'⠂⠤','ㅄ':'⠲⠄','ㅆ':'⠄⠄',
+};
+
+// 초성/중성/종성 목록 (한글 분해용)
+const CHO_LIST = ['ㄱ','ㄲ','ㄴ','ㄷ','ㄸ','ㄹ','ㅁ','ㅂ','ㅃ','ㅅ','ㅆ','ㅇ','ㅈ','ㅉ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+const JUNG_LIST = ['ㅏ','ㅐ','ㅑ','ㅒ','ㅓ','ㅔ','ㅕ','ㅖ','ㅗ','ㅘ','ㅙ','ㅚ','ㅛ','ㅜ','ㅝ','ㅞ','ㅟ','ㅠ','ㅡ','ㅢ','ㅣ'];
+const JONG_LIST = ['','ㄱ','ㄲ','ㄳ','ㄴ','ㄵ','ㄶ','ㄷ','ㄹ','ㄺ','ㄻ','ㄼ','ㄽ','ㄾ','ㄿ','ㅀ','ㅁ','ㅂ','ㅄ','ㅅ','ㅆ','ㅇ','ㅈ','ㅊ','ㅋ','ㅌ','ㅍ','ㅎ'];
+
+// 한글 음절 → 점자
+function hangulToBraille(ch) {
+  const code = ch.charCodeAt(0);
+  if (code < 0xAC00 || code > 0xD7A3) return null;
+  const offset = code - 0xAC00;
+  const cho = Math.floor(offset / (21 * 28));
+  const jung = Math.floor((offset % (21 * 28)) / 28);
+  const jong = offset % 28;
+
+  let result = '';
+  result += KO_CHO_BRAILLE[CHO_LIST[cho]] || '?';
+  result += KO_JUNG_BRAILLE[JUNG_LIST[jung]] || '?';
+  if (jong > 0) result += KO_JONG_BRAILLE[JONG_LIST[jong]] || '?';
+  return result;
+}
+
+// 자모 단독 → 점자 (자음=초성, 모음=중성 테이블)
+function jamoToBraille(ch) {
+  if (KO_CHO_BRAILLE[ch]) return KO_CHO_BRAILLE[ch];
+  if (KO_JUNG_BRAILLE[ch]) return KO_JUNG_BRAILLE[ch];
+  return null;
+}
+
+// 서브언어 (점자 시스템 선택)
+let brailleSubLang = 'ko';
+
+function setBrailleLang(lang) {
+  if (lang === 'ja' || lang === 'zh') return; // 준비중
+  brailleSubLang = lang;
+  // 탭 스타일 업데이트
+  document.querySelectorAll('.br-lang-btn').forEach(btn => {
+    btn.style.borderColor = '#555';
+    btn.style.background = '#1A1A28';
+    btn.style.color = '#888';
+  });
+  const active = document.getElementById(`brlang-${lang}`);
+  if (active) {
+    active.style.borderColor = '#E040A0';
+    active.style.background = '#2A1A28';
+    active.style.color = '#E040A0';
+  }
+  buildKeyboard();
+  updateDisplay();
+}
+
+// 범용 변환: 문자열 → 점자 (서브언어에 따라 분기)
+function toBraille(text) {
+  if (!text) return '';
+  if (brailleSubLang === 'en') return toBrailleEn(text);
+  return toBrailleKo(text);
+}
+
+// 한국 점자: 한글 음절 분해 → 초성+중성+종성
+function toBrailleKo(text) {
+  let result = '';
+  for (const ch of text) {
+    const hb = hangulToBraille(ch);
+    if (hb) { result += hb; continue; }
+    const jb = jamoToBraille(ch);
+    if (jb) { result += jb; continue; }
+    if (EN_TO_BRAILLE[ch]) { result += EN_TO_BRAILLE[ch]; continue; }
+    if (ch === ' ') { result += '⠀'; continue; }
+    result += ch;
+  }
+  return result;
+}
+
+// 영문 점자: 알파벳 직접 매핑
+function toBrailleEn(text) {
+  let result = '';
+  for (const ch of text) {
+    if (EN_TO_BRAILLE[ch]) { result += EN_TO_BRAILLE[ch]; continue; }
+    if (ch === ' ') { result += '⠀'; continue; }
+    result += ch;
+  }
+  return result;
+}
+
+// 점자 영역 표시/숨김
+function updateBrailleVisibility() {
+  const area = document.getElementById('braille-area');
+  if (area) area.style.display = (currentLang === 'braille') ? 'block' : 'none';
+}
+
+// 설정 페이지에서 서브언어 변경
+function onBrailleSubLangChange() {
+  const sel = document.getElementById('braille-sublang-select');
+  if (sel) setBrailleLang(sel.value);
+}
+
+function clearBraille() {
+  inputBuffer = [];
+  updateDisplay();
+  const outEl = document.getElementById('braille-output');
+  const textEl = document.getElementById('braille-text');
+  if (outEl) outEl.textContent = '';
+  if (textEl) textEl.textContent = '';
+}
+
+
 // ═══ 초기화 ═══
 buildKeyboard();
 setupModeButtons();
@@ -923,6 +2028,15 @@ setupGame();
 setupSubtitle();
 setupSteno();
 setupSyntax();
+</script>
+<script>
+// 서비스 워커 해제 (캐시 문제 방지) — 나중에 배포 시 다시 활성화
+if ('serviceWorker' in navigator) {
+  navigator.serviceWorker.getRegistrations().then(regs => {
+    regs.forEach(r => r.unregister());
+  });
+  caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+}
 </script>
 </body>
 </html>

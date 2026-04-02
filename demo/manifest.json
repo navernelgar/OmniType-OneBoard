@@ -1,0 +1,23 @@
+{
+  "name": "원타 키보드 — WONTA Keyboard",
+  "short_name": "WONTA",
+  "description": "하나의 키보드, 모든 언어. 9 modes: 6 languages + math + chemistry + braille.",
+  "start_url": "/demo/index.html",
+  "display": "standalone",
+  "orientation": "landscape",
+  "background_color": "#0A0A0F",
+  "theme_color": "#F0C040",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png"
+    }
+  ],
+  "categories": ["productivity", "utilities", "education"]
+}
