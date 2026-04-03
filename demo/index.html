@@ -326,6 +326,7 @@ const LANGUAGES = ['ko','en','ja','zh','ar','sym','math','chem','braille'];
 const LANG_NAMES = {ko:'Korean',en:'English',ja:'日本語',zh:'中文',ar:'العربية',sym:'특수문자',math:'수학',chem:'화학',braille:'점자'};
 const LANG_FLAGS = {ko:'🇰🇷',en:'🇺🇸',ja:'🇯🇵',zh:'🇨🇳',ar:'🇸🇦',sym:'#',math:'∑',chem:'⚗',braille:'⠿'};
 let currentLang = 'ko';
+let symShiftOn = false; // 특수문자 2페이지
 
 // ═══ 키보드 레이아웃 (음소 기반 — 모든 언어 같은 위치) ═══
 // 창힐(倉頡) 부수 매핑: QWERTY 위치 → 창힐 코드(a~y)
@@ -336,34 +337,34 @@ const KB_KEYS = [
   // QWERTY 위치: Q  W  E  R  T  Y  U  I  O  P
   //              A  S  D  F  G  H  J  K  L
   //              Z  X  C  V  B  N  M
-  {id:'k_b', ko:'ㅂ',en:'q',ja:'q',zh:'月',zhCode:'b', ar:'ض',sym:'\\', math:'β', chem:'B', braille:'ㅂ', c:true},
-  {id:'k_j', ko:'ㅈ',en:'w',ja:'w',zh:'十',zhCode:'j', ar:'ص',sym:'|', math:'j', chem:'j', braille:'ㅈ', c:true},
-  {id:'k_d', ko:'ㄷ',en:'e',ja:'e',zh:'木',zhCode:'d', ar:'ث',sym:'€', math:'δ', chem:'Dy', braille:'ㄷ', c:true},
-  {id:'k_g', ko:'ㄱ',en:'r',ja:'r',zh:'土',zhCode:'g', ar:'ق',sym:'®', math:'γ', chem:'Ga', braille:'ㄱ', c:true},
-  {id:'k_s', ko:'ㅅ',en:'t',ja:'t',zh:'尸',zhCode:'s', ar:'ف',sym:'™', math:'sin', chem:'S', braille:'ㅅ', c:true},
-  {id:'k_yo',ko:'ㅛ',en:'y',ja:'y',zh:'卜',zhCode:'y', ar:'غ',sym:'{', math:'y', chem:'Y', braille:'ㅛ', c:false},
-  {id:'k_yeo',ko:'ㅕ',en:'u',ja:'u',zh:'山',zhCode:'u', ar:'ع',sym:'}', math:'υ', chem:'U', braille:'ㅕ', c:false},
-  {id:'k_ya',ko:'ㅑ',en:'i',ja:'i',zh:'戈',zhCode:'i', ar:'ه',sym:'[', math:'∫', chem:'I', braille:'ㅑ', c:false},
-  {id:'k_ae',ko:'ㅐ',en:'o',ja:'o',zh:'人',zhCode:'o', ar:'خ',sym:']', math:'Ω', chem:'O', braille:'ㅐ', c:false},
-  {id:'k_e', ko:'ㅔ',en:'p',ja:'p',zh:'心',zhCode:'p', ar:'ح',sym:'~', math:'π', chem:'P', braille:'ㅔ', c:false},
+  {id:'k_b', ko:'ㅂ',en:'q',ja:'q',zh:'月',zhCode:'b', ar:'ض',sym:'\\',sym2:'?', math:'β', chem:'B', braille:'ㅂ', c:true},
+  {id:'k_j', ko:'ㅈ',en:'w',ja:'w',zh:'十',zhCode:'j', ar:'ص',sym:'|',sym2:'!', math:'j', chem:'j', braille:'ㅈ', c:true},
+  {id:'k_d', ko:'ㄷ',en:'e',ja:'e',zh:'木',zhCode:'d', ar:'ث',sym:'€',sym2:'"', math:'δ', chem:'Dy', braille:'ㄷ', c:true},
+  {id:'k_g', ko:'ㄱ',en:'r',ja:'r',zh:'土',zhCode:'g', ar:'ق',sym:'®',sym2:"'", math:'γ', chem:'Ga', braille:'ㄱ', c:true},
+  {id:'k_s', ko:'ㅅ',en:'t',ja:'t',zh:'尸',zhCode:'s', ar:'ف',sym:'™',sym2:':', math:'sin', chem:'S', braille:'ㅅ', c:true},
+  {id:'k_yo',ko:'ㅛ',en:'y',ja:'y',zh:'卜',zhCode:'y', ar:'غ',sym:'{',sym2:';', math:'y', chem:'Y', braille:'ㅛ', c:false},
+  {id:'k_yeo',ko:'ㅕ',en:'u',ja:'u',zh:'山',zhCode:'u', ar:'ع',sym:'}',sym2:'(', math:'υ', chem:'U', braille:'ㅕ', c:false},
+  {id:'k_ya',ko:'ㅑ',en:'i',ja:'i',zh:'戈',zhCode:'i', ar:'ه',sym:'[',sym2:')', math:'∫', chem:'I', braille:'ㅑ', c:false},
+  {id:'k_ae',ko:'ㅐ',en:'o',ja:'o',zh:'人',zhCode:'o', ar:'خ',sym:']',sym2:'_', math:'Ω', chem:'O', braille:'ㅐ', c:false},
+  {id:'k_e', ko:'ㅔ',en:'p',ja:'p',zh:'心',zhCode:'p', ar:'ح',sym:'~',sym2:'+', math:'π', chem:'P', braille:'ㅔ', c:false},
   {id:'ROW_BREAK'},
-  {id:'k_m', ko:'ㅁ',en:'a',ja:'a',zh:'日',zhCode:'a', ar:'ش',sym:'@', math:'α', chem:'Al', braille:'ㅁ', c:true},
-  {id:'k_n', ko:'ㄴ',en:'s',ja:'s',zh:'尸',zhCode:'s', ar:'س',sym:'#', math:'ℕ', chem:'N', braille:'ㄴ', c:true},
-  {id:'k_ng',ko:'ㅇ',en:'d',ja:'d',zh:'木',zhCode:'d', ar:'ي',sym:'$', math:'ε', chem:'Er', braille:'ㅇ', c:true},
-  {id:'k_r', ko:'ㄹ',en:'f',ja:'f',zh:'火',zhCode:'f', ar:'ب',sym:'%', math:'ℝ', chem:'Ra', braille:'ㄹ', c:true},
-  {id:'k_h', ko:'ㅎ',en:'g',ja:'g',zh:'竹',zhCode:'h', ar:'ل',sym:'&', math:'ℏ', chem:'H', braille:'ㅎ', c:true},
-  {id:'k_o', ko:'ㅗ',en:'h',ja:'h',zh:'大',zhCode:'k', ar:'ا',sym:'→', math:'κ', chem:'K', braille:'ㅗ', c:false},
-  {id:'k_eo',ko:'ㅓ',en:'j',ja:'j',zh:'中',zhCode:'l', ar:'ت',sym:'←', math:'λ', chem:'Li', braille:'ㅓ', c:false},
-  {id:'k_a', ko:'ㅏ',en:'k',ja:'k',zh:'一',zhCode:'m', ar:'ن',sym:'↑', math:'μ', chem:'Mg', braille:'ㅏ', c:false},
-  {id:'k_i', ko:'ㅣ',en:'l',ja:'l',zh:'弓',zhCode:'n', ar:'م',sym:'↓', math:'θ', chem:'Ti', braille:'ㅣ', c:false},
+  {id:'k_m', ko:'ㅁ',en:'a',ja:'a',zh:'日',zhCode:'a', ar:'ش',sym:'@',sym2:'^', math:'α', chem:'Al', braille:'ㅁ', c:true},
+  {id:'k_n', ko:'ㄴ',en:'s',ja:'s',zh:'尸',zhCode:'s', ar:'س',sym:'#',sym2:'*', math:'ℕ', chem:'N', braille:'ㄴ', c:true},
+  {id:'k_ng',ko:'ㅇ',en:'d',ja:'d',zh:'木',zhCode:'d', ar:'ي',sym:'$',sym2:'=', math:'ε', chem:'Er', braille:'ㅇ', c:true},
+  {id:'k_r', ko:'ㄹ',en:'f',ja:'f',zh:'火',zhCode:'f', ar:'ب',sym:'%',sym2:'/', math:'ℝ', chem:'Ra', braille:'ㄹ', c:true},
+  {id:'k_h', ko:'ㅎ',en:'g',ja:'g',zh:'竹',zhCode:'h', ar:'ل',sym:'&',sym2:'-', math:'ℏ', chem:'H', braille:'ㅎ', c:true},
+  {id:'k_o', ko:'ㅗ',en:'h',ja:'h',zh:'大',zhCode:'k', ar:'ا',sym:'→',sym2:'¥', math:'κ', chem:'K', braille:'ㅗ', c:false},
+  {id:'k_eo',ko:'ㅓ',en:'j',ja:'j',zh:'中',zhCode:'l', ar:'ت',sym:'←',sym2:'£', math:'λ', chem:'Li', braille:'ㅓ', c:false},
+  {id:'k_a', ko:'ㅏ',en:'k',ja:'k',zh:'一',zhCode:'m', ar:'ن',sym:'↑',sym2:'₩', math:'μ', chem:'Mg', braille:'ㅏ', c:false},
+  {id:'k_i', ko:'ㅣ',en:'l',ja:'l',zh:'弓',zhCode:'n', ar:'م',sym:'↓',sym2:'¢', math:'θ', chem:'Ti', braille:'ㅣ', c:false},
   {id:'ROW_BREAK'},
-  {id:'k_k', ko:'ㅋ',en:'z',ja:'z',zh:'難',zhCode:'x', ar:'ئ',sym:'©', math:'∎', chem:'(aq)', braille:'ㅋ', c:true},
-  {id:'k_t', ko:'ㅌ',en:'x',ja:'x',zh:'金',zhCode:'c', ar:'ء',sym:'`', math:'cos', chem:'C', braille:'ㅌ', c:true},
-  {id:'k_ch',ko:'ㅊ',en:'c',ja:'c',zh:'女',zhCode:'v', ar:'ؤ',sym:'°', math:'∨', chem:'V', braille:'ㅊ', c:true},
-  {id:'k_p', ko:'ㅍ',en:'v',ja:'v',zh:'田',zhCode:'w', ar:'ر',sym:'…', math:'ω', chem:'W', braille:'ㅍ', c:true},
-  {id:'k_yu',ko:'ㅠ',en:'b',ja:'b',zh:'水',zhCode:'e', ar:'لا',sym:'<', math:'!', chem:'F', braille:'ㅠ', c:false},
-  {id:'k_u', ko:'ㅜ',en:'n',ja:'n',zh:'口',zhCode:'r', ar:'ى',sym:'>', math:'ξ', chem:'Xe', braille:'ㅜ', c:false},
-  {id:'k_eu',ko:'ㅡ',en:'m',ja:'m',zh:'手',zhCode:'q', ar:'ة',sym:'§', math:'ζ', chem:'Zn', braille:'ㅡ', c:false},
+  {id:'k_k', ko:'ㅋ',en:'z',ja:'z',zh:'難',zhCode:'x', ar:'ئ',sym:'©',sym2:'¶', math:'∎', chem:'(aq)', braille:'ㅋ', c:true},
+  {id:'k_t', ko:'ㅌ',en:'x',ja:'x',zh:'金',zhCode:'c', ar:'ء',sym:'`',sym2:'≠', math:'cos', chem:'C', braille:'ㅌ', c:true},
+  {id:'k_ch',ko:'ㅊ',en:'c',ja:'c',zh:'女',zhCode:'v', ar:'ؤ',sym:'°',sym2:'≤', math:'∨', chem:'V', braille:'ㅊ', c:true},
+  {id:'k_p', ko:'ㅍ',en:'v',ja:'v',zh:'田',zhCode:'w', ar:'ر',sym:'…',sym2:'≥', math:'ω', chem:'W', braille:'ㅍ', c:true},
+  {id:'k_yu',ko:'ㅠ',en:'b',ja:'b',zh:'水',zhCode:'e', ar:'لا',sym:'<',sym2:'±', math:'!', chem:'F', braille:'ㅠ', c:false},
+  {id:'k_u', ko:'ㅜ',en:'n',ja:'n',zh:'口',zhCode:'r', ar:'ى',sym:'>',sym2:'÷', math:'ξ', chem:'Xe', braille:'ㅜ', c:false},
+  {id:'k_eu',ko:'ㅡ',en:'m',ja:'m',zh:'手',zhCode:'q', ar:'ة',sym:'§',sym2:'×', math:'ζ', chem:'Zn', braille:'ㅡ', c:false},
 ];
 
 // ═══ 키보드 생성 ═══
@@ -405,8 +406,13 @@ function buildKeyboard() {
     const key = document.createElement('div');
     key.className = `key ${k.c ? 'consonant' : 'vowel'}`;
     const dispLang = (currentLang === 'braille') ? brailleSubLang : currentLang;
-    const mainChar = k[dispLang];
-    const subChar = dispLang === 'ko' ? k.en : k.ko;
+    let mainChar = k[dispLang];
+    let subChar = dispLang === 'ko' ? k.en : k.ko;
+    // sym 모드: Shift면 sym2 표시
+    if (currentLang === 'sym' && symShiftOn && k.sym2) {
+      mainChar = k.sym2;
+      subChar = k.sym; // 1페이지 문자를 서브로
+    }
     key.innerHTML = `<div class="main">${mainChar}</div><div class="sub">${subChar}</div>`;
     key.dataset.keyId = k.id;
     key.addEventListener('click', () => pressKey(k.id));
@@ -433,6 +439,22 @@ function buildKeyboard() {
   langBtn.addEventListener('mousedown', () => langBtn.classList.add('pressed'));
   langBtn.addEventListener('mouseup', () => setTimeout(() => langBtn.classList.remove('pressed'), 150));
   funcRow.appendChild(langBtn);
+
+  // 특수문자 모드: Shift 버튼 (1페이지 ↔ 2페이지)
+  if (currentLang === 'sym') {
+    const shiftBtn = document.createElement('div');
+    shiftBtn.className = 'key func';
+    shiftBtn.id = 'sym-shift-btn';
+    shiftBtn.style.width = '80px';
+    shiftBtn.style.background = symShiftOn ? '#2A2800' : '#1A1A28';
+    shiftBtn.style.borderColor = symShiftOn ? '#F0C040' : '#555';
+    shiftBtn.innerHTML = `<div class="main" style="font-size:0.9em;color:${symShiftOn ? '#F0C040' : '#888'}">⇧</div><div class="sub" style="font-size:0.6em;color:${symShiftOn ? '#F0C040' : '#555'}">${symShiftOn ? '?!":"' : '\\|€®'}</div>`;
+    shiftBtn.addEventListener('click', () => {
+      symShiftOn = !symShiftOn;
+      buildKeyboard(); // 키보드 다시 그리기
+    });
+    funcRow.appendChild(shiftBtn);
+  }
 
   // 수학 모드: 0 키, . 키
   if (currentLang === 'math') {
@@ -578,6 +600,18 @@ document.addEventListener('keydown', (e) => {
   if (QWERTY_TO_KEYID[lower] && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
     const keyId = QWERTY_TO_KEYID[lower];
+
+    // Shift + 특수문자 모드 = 2페이지 직접 입력
+    if (e.shiftKey && currentLang === 'sym') {
+      const kDef = KB_KEYS.find(k => k.id === keyId);
+      if (kDef && kDef.sym2) {
+        inputBuffer.push('MATH:' + kDef.sym2);
+        updateDisplay();
+        const btn = document.querySelector(`[data-key-id="${keyId}"]`);
+        if (btn) { btn.classList.add('pressed'); setTimeout(() => btn.classList.remove('pressed'), 150); }
+        return;
+      }
+    }
 
     // Shift + 자음 = 쌍자음 (한국어/점자 모드)
     if (e.shiftKey && (currentLang === 'ko' || currentLang === 'braille')) {
@@ -1258,11 +1292,11 @@ function pressKey(keyId) {
   const kDef = KB_KEYS.find(k => k.id === keyId);
   if (!kDef) return;
 
-  // 특수문자 모드: 키 누르면 바로 입력
+  // 특수문자 모드: 키 누르면 바로 입력 (symShift면 2페이지)
   if (currentLang === 'sym') {
-    const symChar = kDef.sym || '';
+    const symChar = symShiftOn ? (kDef.sym2 || kDef.sym || '') : (kDef.sym || '');
     if (symChar) {
-      inputBuffer.push('MATH:' + symChar); // MATH: 접두어로 합성 안 하고 그대로 출력
+      inputBuffer.push('MATH:' + symChar);
       updateDisplay();
     }
     return;
