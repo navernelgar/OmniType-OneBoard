@@ -211,11 +211,22 @@ body { background:#0A0A0F; color:#fff; font-family:'Segoe UI','Malgun Gothic',sa
         <button class="br-lang-btn" onclick="setBrailleLang('zh')" id="brlang-zh"
           style="padding:3px 10px;border-radius:5px;border:1px solid #555;background:#1A1A28;color:#555;cursor:pointer;font-size:0.8em;">🇨🇳 준비중</button>
       </div>
-      <button onclick="clearBraille()" style="padding:4px 14px;border-radius:6px;border:1px solid #555;background:#1A1A28;color:#888;cursor:pointer;font-size:0.85em;margin-left:auto;">✕ Clear</button>
+      <button onclick="clearBraille()" style="padding:4px 14px;border-radius:6px;border:1px solid #555;background:#1A1A28;color:#888;cursor:pointer;font-size:0.85em;">✕ Clear</button>
+      <!-- 청각 점자 버튼 -->
+      <button onclick="playCurrentBraille()" id="btn-braille-listen" title="점자를 소리로 듣기"
+        style="padding:4px 14px;border-radius:6px;border:1px solid #F0C040;background:#2A2008;color:#F0C040;cursor:pointer;font-size:0.85em;">♪ 점자음</button>
+      <button onclick="speakBrailleText()" id="btn-braille-speak" title="TTS로 읽어주기"
+        style="padding:4px 14px;border-radius:6px;border:1px solid #E040A0;background:#2A0820;color:#E040A0;cursor:pointer;font-size:0.85em;">🗣 읽기</button>
+      <button onclick="toggleAutoSpeak()" id="btn-auto-speak"
+        style="padding:4px 14px;border-radius:6px;border:1px solid #555;background:#1A1A28;color:#888;cursor:pointer;font-size:0.85em;">🗣 자동읽기 OFF</button>
+      <button onclick="toggleAudioBraille()" id="btn-audio-toggle"
+        style="padding:4px 14px;border-radius:6px;border:1px solid #F0C040;background:#2A2008;color:#F0C040;cursor:pointer;font-size:0.85em;margin-left:auto;">🔊 청각점자 ON</button>
     </div>
     <!-- 점자 변환 결과 (큰 글씨) -->
     <div style="background:#111118;border-radius:12px;border:2px solid #333;padding:20px;min-height:80px;">
       <div id="braille-output" style="font-size:3em;color:#F0C040;letter-spacing:6px;word-break:break-all;min-height:50px;line-height:1.3;">⠀</div>
+      <!-- 점자 시각화 (6점 그리드) -->
+      <div id="braille-dots-visual" style="display:flex;gap:16px;flex-wrap:wrap;margin-top:15px;min-height:40px;"></div>
     </div>
   </div>
 </div>
@@ -311,9 +322,9 @@ const WORD_DICT = {
 };
 
 // ═══ 언어 정의 ═══
-const LANGUAGES = ['ko','en','ja','zh','ar','ru','math','chem','braille'];
-const LANG_NAMES = {ko:'Korean',en:'English',ja:'日本語',zh:'中文',ar:'العربية',ru:'Русский',math:'수학',chem:'화학',braille:'점자'};
-const LANG_FLAGS = {ko:'🇰🇷',en:'🇺🇸',ja:'🇯🇵',zh:'🇨🇳',ar:'🇸🇦',ru:'🇷🇺',math:'∑',chem:'⚗',braille:'⠿'};
+const LANGUAGES = ['ko','en','ja','zh','ar','sym','math','chem','braille'];
+const LANG_NAMES = {ko:'Korean',en:'English',ja:'日本語',zh:'中文',ar:'العربية',sym:'특수문자',math:'수학',chem:'화학',braille:'점자'};
+const LANG_FLAGS = {ko:'🇰🇷',en:'🇺🇸',ja:'🇯🇵',zh:'🇨🇳',ar:'🇸🇦',sym:'#',math:'∑',chem:'⚗',braille:'⠿'};
 let currentLang = 'ko';
 
 // ═══ 키보드 레이아웃 (음소 기반 — 모든 언어 같은 위치) ═══
@@ -325,34 +336,34 @@ const KB_KEYS = [
   // QWERTY 위치: Q  W  E  R  T  Y  U  I  O  P
   //              A  S  D  F  G  H  J  K  L
   //              Z  X  C  V  B  N  M
-  {id:'k_b', ko:'ㅂ',en:'q',ja:'q',zh:'月',zhCode:'b', ar:'ض',ru:'й', math:'β', chem:'B', braille:'ㅂ', c:true},
-  {id:'k_j', ko:'ㅈ',en:'w',ja:'w',zh:'十',zhCode:'j', ar:'ص',ru:'ц', math:'j', chem:'j', braille:'ㅈ', c:true},
-  {id:'k_d', ko:'ㄷ',en:'e',ja:'e',zh:'木',zhCode:'d', ar:'ث',ru:'у', math:'δ', chem:'Dy', braille:'ㄷ', c:true},
-  {id:'k_g', ko:'ㄱ',en:'r',ja:'r',zh:'土',zhCode:'g', ar:'ق',ru:'к', math:'γ', chem:'Ga', braille:'ㄱ', c:true},
-  {id:'k_s', ko:'ㅅ',en:'t',ja:'t',zh:'尸',zhCode:'s', ar:'ف',ru:'е', math:'sin', chem:'S', braille:'ㅅ', c:true},
-  {id:'k_yo',ko:'ㅛ',en:'y',ja:'y',zh:'卜',zhCode:'y', ar:'غ',ru:'н', math:'y', chem:'Y', braille:'ㅛ', c:false},
-  {id:'k_yeo',ko:'ㅕ',en:'u',ja:'u',zh:'山',zhCode:'u', ar:'ع',ru:'г', math:'υ', chem:'U', braille:'ㅕ', c:false},
-  {id:'k_ya',ko:'ㅑ',en:'i',ja:'i',zh:'戈',zhCode:'i', ar:'ه',ru:'ш', math:'∫', chem:'I', braille:'ㅑ', c:false},
-  {id:'k_ae',ko:'ㅐ',en:'o',ja:'o',zh:'人',zhCode:'o', ar:'خ',ru:'щ', math:'Ω', chem:'O', braille:'ㅐ', c:false},
-  {id:'k_e', ko:'ㅔ',en:'p',ja:'p',zh:'心',zhCode:'p', ar:'ح',ru:'з', math:'π', chem:'P', braille:'ㅔ', c:false},
+  {id:'k_b', ko:'ㅂ',en:'q',ja:'q',zh:'月',zhCode:'b', ar:'ض',sym:'\\', math:'β', chem:'B', braille:'ㅂ', c:true},
+  {id:'k_j', ko:'ㅈ',en:'w',ja:'w',zh:'十',zhCode:'j', ar:'ص',sym:'|', math:'j', chem:'j', braille:'ㅈ', c:true},
+  {id:'k_d', ko:'ㄷ',en:'e',ja:'e',zh:'木',zhCode:'d', ar:'ث',sym:'€', math:'δ', chem:'Dy', braille:'ㄷ', c:true},
+  {id:'k_g', ko:'ㄱ',en:'r',ja:'r',zh:'土',zhCode:'g', ar:'ق',sym:'®', math:'γ', chem:'Ga', braille:'ㄱ', c:true},
+  {id:'k_s', ko:'ㅅ',en:'t',ja:'t',zh:'尸',zhCode:'s', ar:'ف',sym:'™', math:'sin', chem:'S', braille:'ㅅ', c:true},
+  {id:'k_yo',ko:'ㅛ',en:'y',ja:'y',zh:'卜',zhCode:'y', ar:'غ',sym:'{', math:'y', chem:'Y', braille:'ㅛ', c:false},
+  {id:'k_yeo',ko:'ㅕ',en:'u',ja:'u',zh:'山',zhCode:'u', ar:'ع',sym:'}', math:'υ', chem:'U', braille:'ㅕ', c:false},
+  {id:'k_ya',ko:'ㅑ',en:'i',ja:'i',zh:'戈',zhCode:'i', ar:'ه',sym:'[', math:'∫', chem:'I', braille:'ㅑ', c:false},
+  {id:'k_ae',ko:'ㅐ',en:'o',ja:'o',zh:'人',zhCode:'o', ar:'خ',sym:']', math:'Ω', chem:'O', braille:'ㅐ', c:false},
+  {id:'k_e', ko:'ㅔ',en:'p',ja:'p',zh:'心',zhCode:'p', ar:'ح',sym:'~', math:'π', chem:'P', braille:'ㅔ', c:false},
   {id:'ROW_BREAK'},
-  {id:'k_m', ko:'ㅁ',en:'a',ja:'a',zh:'日',zhCode:'a', ar:'ش',ru:'ф', math:'α', chem:'Al', braille:'ㅁ', c:true},
-  {id:'k_n', ko:'ㄴ',en:'s',ja:'s',zh:'尸',zhCode:'s', ar:'س',ru:'ы', math:'ℕ', chem:'N', braille:'ㄴ', c:true},
-  {id:'k_ng',ko:'ㅇ',en:'d',ja:'d',zh:'木',zhCode:'d', ar:'ي',ru:'в', math:'ε', chem:'Er', braille:'ㅇ', c:true},
-  {id:'k_r', ko:'ㄹ',en:'f',ja:'f',zh:'火',zhCode:'f', ar:'ب',ru:'а', math:'ℝ', chem:'Ra', braille:'ㄹ', c:true},
-  {id:'k_h', ko:'ㅎ',en:'g',ja:'g',zh:'竹',zhCode:'h', ar:'ل',ru:'п', math:'ℏ', chem:'H', braille:'ㅎ', c:true},
-  {id:'k_o', ko:'ㅗ',en:'h',ja:'h',zh:'大',zhCode:'k', ar:'ا',ru:'р', math:'κ', chem:'K', braille:'ㅗ', c:false},
-  {id:'k_eo',ko:'ㅓ',en:'j',ja:'j',zh:'中',zhCode:'l', ar:'ت',ru:'о', math:'λ', chem:'Li', braille:'ㅓ', c:false},
-  {id:'k_a', ko:'ㅏ',en:'k',ja:'k',zh:'一',zhCode:'m', ar:'ن',ru:'л', math:'μ', chem:'Mg', braille:'ㅏ', c:false},
-  {id:'k_i', ko:'ㅣ',en:'l',ja:'l',zh:'弓',zhCode:'n', ar:'م',ru:'д', math:'θ', chem:'Ti', braille:'ㅣ', c:false},
+  {id:'k_m', ko:'ㅁ',en:'a',ja:'a',zh:'日',zhCode:'a', ar:'ش',sym:'@', math:'α', chem:'Al', braille:'ㅁ', c:true},
+  {id:'k_n', ko:'ㄴ',en:'s',ja:'s',zh:'尸',zhCode:'s', ar:'س',sym:'#', math:'ℕ', chem:'N', braille:'ㄴ', c:true},
+  {id:'k_ng',ko:'ㅇ',en:'d',ja:'d',zh:'木',zhCode:'d', ar:'ي',sym:'$', math:'ε', chem:'Er', braille:'ㅇ', c:true},
+  {id:'k_r', ko:'ㄹ',en:'f',ja:'f',zh:'火',zhCode:'f', ar:'ب',sym:'%', math:'ℝ', chem:'Ra', braille:'ㄹ', c:true},
+  {id:'k_h', ko:'ㅎ',en:'g',ja:'g',zh:'竹',zhCode:'h', ar:'ل',sym:'&', math:'ℏ', chem:'H', braille:'ㅎ', c:true},
+  {id:'k_o', ko:'ㅗ',en:'h',ja:'h',zh:'大',zhCode:'k', ar:'ا',sym:'→', math:'κ', chem:'K', braille:'ㅗ', c:false},
+  {id:'k_eo',ko:'ㅓ',en:'j',ja:'j',zh:'中',zhCode:'l', ar:'ت',sym:'←', math:'λ', chem:'Li', braille:'ㅓ', c:false},
+  {id:'k_a', ko:'ㅏ',en:'k',ja:'k',zh:'一',zhCode:'m', ar:'ن',sym:'↑', math:'μ', chem:'Mg', braille:'ㅏ', c:false},
+  {id:'k_i', ko:'ㅣ',en:'l',ja:'l',zh:'弓',zhCode:'n', ar:'م',sym:'↓', math:'θ', chem:'Ti', braille:'ㅣ', c:false},
   {id:'ROW_BREAK'},
-  {id:'k_k', ko:'ㅋ',en:'z',ja:'z',zh:'難',zhCode:'x', ar:'ئ',ru:'я', math:'∎', chem:'(aq)', braille:'ㅋ', c:true},
-  {id:'k_t', ko:'ㅌ',en:'x',ja:'x',zh:'金',zhCode:'c', ar:'ء',ru:'ч', math:'cos', chem:'C', braille:'ㅌ', c:true},
-  {id:'k_ch',ko:'ㅊ',en:'c',ja:'c',zh:'女',zhCode:'v', ar:'ؤ',ru:'с', math:'∨', chem:'V', braille:'ㅊ', c:true},
-  {id:'k_p', ko:'ㅍ',en:'v',ja:'v',zh:'田',zhCode:'w', ar:'ر',ru:'м', math:'ω', chem:'W', braille:'ㅍ', c:true},
-  {id:'k_yu',ko:'ㅠ',en:'b',ja:'b',zh:'水',zhCode:'e', ar:'لا',ru:'и', math:'!', chem:'F', braille:'ㅠ', c:false},
-  {id:'k_u', ko:'ㅜ',en:'n',ja:'n',zh:'口',zhCode:'r', ar:'ى',ru:'т', math:'ξ', chem:'Xe', braille:'ㅜ', c:false},
-  {id:'k_eu',ko:'ㅡ',en:'m',ja:'m',zh:'手',zhCode:'q', ar:'ة',ru:'ь', math:'ζ', chem:'Zn', braille:'ㅡ', c:false},
+  {id:'k_k', ko:'ㅋ',en:'z',ja:'z',zh:'難',zhCode:'x', ar:'ئ',sym:'©', math:'∎', chem:'(aq)', braille:'ㅋ', c:true},
+  {id:'k_t', ko:'ㅌ',en:'x',ja:'x',zh:'金',zhCode:'c', ar:'ء',sym:'`', math:'cos', chem:'C', braille:'ㅌ', c:true},
+  {id:'k_ch',ko:'ㅊ',en:'c',ja:'c',zh:'女',zhCode:'v', ar:'ؤ',sym:'°', math:'∨', chem:'V', braille:'ㅊ', c:true},
+  {id:'k_p', ko:'ㅍ',en:'v',ja:'v',zh:'田',zhCode:'w', ar:'ر',sym:'…', math:'ω', chem:'W', braille:'ㅍ', c:true},
+  {id:'k_yu',ko:'ㅠ',en:'b',ja:'b',zh:'水',zhCode:'e', ar:'لا',sym:'<', math:'!', chem:'F', braille:'ㅠ', c:false},
+  {id:'k_u', ko:'ㅜ',en:'n',ja:'n',zh:'口',zhCode:'r', ar:'ى',sym:'>', math:'ξ', chem:'Xe', braille:'ㅜ', c:false},
+  {id:'k_eu',ko:'ㅡ',en:'m',ja:'m',zh:'手',zhCode:'q', ar:'ة',sym:'§', math:'ζ', chem:'Zn', braille:'ㅡ', c:false},
 ];
 
 // ═══ 키보드 생성 ═══
@@ -567,6 +578,27 @@ document.addEventListener('keydown', (e) => {
   if (QWERTY_TO_KEYID[lower] && !e.ctrlKey && !e.altKey && !e.metaKey) {
     e.preventDefault();
     const keyId = QWERTY_TO_KEYID[lower];
+
+    // Shift + 자음 = 쌍자음 (한국어/점자 모드)
+    if (e.shiftKey && (currentLang === 'ko' || currentLang === 'braille')) {
+      const SSANG_MAP = {
+        'k_g': 'ㄲ', 'k_d': 'ㄸ', 'k_b': 'ㅃ', 'k_s': 'ㅅ', 'k_j': 'ㅈ',
+      };
+      // ㅅ→ㅆ, ㅈ→ㅉ 매핑
+      const SSANG_JAMO = {
+        'k_g': 'ㄲ', 'k_d': 'ㄸ', 'k_b': 'ㅃ', 'k_s': 'ㅆ', 'k_j': 'ㅉ',
+      };
+      if (SSANG_JAMO[keyId]) {
+        // 쌍자음을 직접 버퍼에 추가
+        inputBuffer.push('SSANG:' + SSANG_JAMO[keyId]);
+        updateDisplay();
+        // 버튼 애니메이션
+        const btn = document.querySelector(`[data-key-id="${keyId}"]`);
+        if (btn) { btn.classList.add('pressed'); setTimeout(() => btn.classList.remove('pressed'), 150); }
+        return;
+      }
+    }
+
     // 화상키보드 버튼 눌림 애니메이션
     const btn = document.querySelector(`[data-key-id="${keyId}"]`);
     if (btn) {
@@ -669,8 +701,23 @@ function composeHangul(jamos) {
 
     // 초성이면 → 모음 찾기
     if (choIdx >= 0 && i + 1 < jamos.length) {
-      const v = jamos[i + 1];
-      const jungIdx = JUNG.indexOf(v);
+      let v = jamos[i + 1];
+      let jungIdx = JUNG.indexOf(v);
+
+      // 복합 모음 합성 (ㅗ+ㅏ→ㅘ, ㅜ+ㅓ→ㅝ, ㅡ+ㅣ→ㅢ 등)
+      if (jungIdx >= 0 && i + 2 < jamos.length) {
+        const v2 = jamos[i + 2];
+        const compound = v + v2;
+        const COMPOUND_MAP = {'ㅗㅏ':'ㅘ','ㅗㅐ':'ㅙ','ㅗㅣ':'ㅚ','ㅜㅓ':'ㅝ','ㅜㅔ':'ㅞ','ㅜㅣ':'ㅟ','ㅡㅣ':'ㅢ'};
+        if (COMPOUND_MAP[compound] && JUNG.indexOf(v2) >= 0) {
+          const compJungIdx = JUNG.indexOf(COMPOUND_MAP[compound]);
+          if (compJungIdx >= 0) {
+            v = COMPOUND_MAP[compound];
+            jungIdx = compJungIdx;
+            i++; // 두 번째 모음 소비
+          }
+        }
+      }
 
       if (jungIdx >= 0) {
         // 초성 + 중성 확인. 종성 있는지 체크
@@ -701,10 +748,20 @@ function composeHangul(jamos) {
     }
 
     // 모음 단독 (초성 ㅇ 없이)
-    const jungAlone = JUNG.indexOf(c);
-    if (jungAlone >= 0) {
+    let jungAloneIdx = JUNG.indexOf(c);
+    if (jungAloneIdx >= 0) {
+      // 복합 모음 체크
+      if (i + 1 < jamos.length) {
+        const v2 = jamos[i + 1];
+        const compound = c + v2;
+        const COMPOUND_MAP = {'ㅗㅏ':'ㅘ','ㅗㅐ':'ㅙ','ㅗㅣ':'ㅚ','ㅜㅓ':'ㅝ','ㅜㅔ':'ㅞ','ㅜㅣ':'ㅟ','ㅡㅣ':'ㅢ'};
+        if (COMPOUND_MAP[compound] && JUNG.indexOf(v2) >= 0) {
+          const compIdx = JUNG.indexOf(COMPOUND_MAP[compound]);
+          if (compIdx >= 0) { jungAloneIdx = compIdx; i++; }
+        }
+      }
       // ㅇ(무음) + 모음으로 합성
-      const code = 0xAC00 + (11 * 21 + jungAlone) * 28;
+      const code = 0xAC00 + (11 * 21 + jungAloneIdx) * 28;
       result += String.fromCharCode(code);
       i++;
       continue;
@@ -1132,7 +1189,24 @@ function composeLang(jamos, lang) {
   const normalJamos = [];
   let result = '';
   for (const j of jamos) {
-    if (typeof j === 'string' && j.startsWith && (j.startsWith('ZH_CHAR:') || j.startsWith('MATH:'))) {
+    if (typeof j === 'string' && j.startsWith && j.startsWith('SSANG:')) {
+      // 쌍자음: 일반 자모로 추가 (한글 합성에 참여)
+      if (normalJamos.length > 0) {
+        result += _composePure(normalJamos, lang);
+        normalJamos.length = 0;
+      }
+      const ssangChar = j.substring(6);
+      if (lang === 'braille') {
+        // 점자 모드: 쌍자음 점자로 변환
+        const braille = KO_CHO_BRAILLE[ssangChar] || ssangChar;
+        result += braille;
+      } else if (lang === 'ko') {
+        // 한국어: 자모로 추가해서 한글 합성에 참여
+        normalJamos.push(ssangChar);
+      } else {
+        result += ssangChar;
+      }
+    } else if (typeof j === 'string' && j.startsWith && (j.startsWith('ZH_CHAR:') || j.startsWith('MATH:'))) {
       // 앞에 쌓인 일반 자모 먼저 합성
       if (normalJamos.length > 0) {
         result += _composePure(normalJamos, lang);
@@ -1153,6 +1227,7 @@ function composeLang(jamos, lang) {
 
 function _composePure(jamos, lang) {
   if (lang === 'ko') return composeHangul(jamos);
+  if (lang === 'sym') return jamos.join(''); // 특수문자: 조합 없이 그대로
   if (lang === 'braille') {
     // 메인 디스플레이 = 점자
     if (brailleSubLang === 'en') return toBrailleEn(jamos.join(''));
@@ -1183,6 +1258,16 @@ function pressKey(keyId) {
   const kDef = KB_KEYS.find(k => k.id === keyId);
   if (!kDef) return;
 
+  // 특수문자 모드: 키 누르면 바로 입력
+  if (currentLang === 'sym') {
+    const symChar = kDef.sym || '';
+    if (symChar) {
+      inputBuffer.push('MATH:' + symChar); // MATH: 접두어로 합성 안 하고 그대로 출력
+      updateDisplay();
+    }
+    return;
+  }
+
   // 중국어 모드: 창힐 코드 입력
   if (currentLang === 'zh') {
     const zhCode = kDef.zhCode || '';
@@ -1210,6 +1295,8 @@ function pressKey(keyId) {
   hideMathCodePanel();
   inputBuffer.push(keyId);
   updateDisplay();
+
+  // 점자 소리는 updateDisplay에서 합성 후 재생 (쌍자음 등 처리)
 }
 
 function updateDisplay() {
@@ -1220,7 +1307,8 @@ function updateDisplay() {
     const phonemes = inputBuffer.map(kid => {
       if (kid === ' ') return ' ';
       if (kid.startsWith && kid.startsWith('ZH_CHAR:')) return kid;
-      if (kid.startsWith && kid.startsWith('MATH:')) return kid;  // 수학 부호 그대로
+      if (kid.startsWith && kid.startsWith('MATH:')) return kid;
+      if (kid.startsWith && kid.startsWith('SSANG:')) return kid;  // 쌍자음 그대로 전달
       const k = KB_KEYS.find(x => x.id === kid);
       const effLang = (lang === 'braille') ? brailleSubLang : lang;
       return k ? k[effLang] || kid : kid;
@@ -1253,6 +1341,7 @@ function updateDisplay() {
         const srcPhonemes = inputBuffer.map(kid => {
           if (kid === ' ') return ' ';
           if (typeof kid === 'string' && kid.startsWith && kid.startsWith('MATH:')) return kid.substring(5);
+          if (typeof kid === 'string' && kid.startsWith && kid.startsWith('SSANG:')) return kid.substring(6);
           const k = KB_KEYS.find(x => x.id === kid);
           return k ? k[brailleSubLang] || kid : kid;
         });
@@ -1264,6 +1353,55 @@ function updateDisplay() {
         });
         if (wb.length) srcText += composeLang(wb, brailleSubLang);
         brOut.textContent = srcText || '';
+        // 자동읽기 TTS
+        if (typeof autoSpeakNewChar === 'function') autoSpeakNewChar();
+
+        // 청각 점자: 자모별 고유 음 재생
+        if (audioBrailleOn && srcText && srcText !== _lastBrailleComposed) {
+        // 새로 추가된 글자만
+        const newPart = (_lastBrailleComposed && srcText.startsWith(_lastBrailleComposed))
+          ? srcText.slice(_lastBrailleComposed.length)
+          : srcText.slice(-1);
+        if (newPart) {
+          let delay = 0;
+          for (const ch of newPart) {
+            // 한글 음절이면 분해해서 초성+중성+종성 각각 재생
+            const code = ch.charCodeAt(0);
+            if (code >= 0xAC00 && code <= 0xD7A3) {
+              const offset = code - 0xAC00;
+              const cho = CHO_LIST[Math.floor(offset / (21 * 28))];
+              const jung = JUNG_LIST[Math.floor((offset % (21 * 28)) / 28)];
+              const jongIdx = offset % 28;
+              const jong = jongIdx > 0 ? JONG_LIST[jongIdx] : null;
+              setTimeout(() => playJamoSound(cho, 0.25), delay);
+              delay += 180;
+              setTimeout(() => playJamoSound(jung, 0.3), delay);
+              delay += 200;
+              if (jong) {
+                setTimeout(() => playJamoSound(jong, 0.2), delay);
+                delay += 150;
+              }
+            } else if (ch !== ' ') {
+              // 자모 단독 or 영문
+              setTimeout(() => playJamoSound(ch, 0.3), delay);
+              delay += 200;
+            }
+          }
+          // 점자 6점 화음도 같이 재생 (뒤에)
+          setTimeout(() => {
+            const newBraille = composed.slice(-(newPart.length * 3));
+            for (const bc of newBraille) {
+              const dots = brailleToDotsArray(bc);
+              if (dots) { playBrailleChord(dots, 0.15); break; }
+            }
+          }, delay);
+        }
+        _lastBrailleComposed = srcText;
+      }
+      } // brOut
+      // 점자 6점 시각화 업데이트
+      if (typeof updateBrailleDotsVisual === 'function') {
+        updateBrailleDotsVisual(composed);
       }
     }
 
@@ -2019,6 +2157,287 @@ function clearBraille() {
   if (textEl) textEl.textContent = '';
 }
 
+
+// ═══ 청각 점자 시스템 (Auditory Braille) ═══
+// 점자 유니코드 → 6점 배열 → 주파수 화음 + 진동 패턴
+
+// 6점 화음용 (기존)
+const BRAILLE_DOT_FREQ = [262, 330, 392, 523, 659, 784];
+
+// ★ 자모별 고유 음 — 피아노 2옥타브 범위, 반음 단위로 완전히 다른 음
+// 초성 14개: C3~C#4 (낮은 음역 = 자음)
+const CHO_SOUND = {
+  'ㄱ': 131, 'ㄲ': 139, 'ㄴ': 147, 'ㄷ': 156, 'ㄸ': 165,
+  'ㄹ': 175, 'ㅁ': 185, 'ㅂ': 196, 'ㅃ': 208, 'ㅅ': 220,
+  'ㅆ': 233, 'ㅇ': 247, 'ㅈ': 262, 'ㅉ': 277, 'ㅊ': 294,
+  'ㅋ': 311, 'ㅌ': 330, 'ㅍ': 349, 'ㅎ': 370,
+};
+// 중성 12개: C5~B5 (높은 음역 = 모음, 맑은 소리)
+const JUNG_SOUND = {
+  'ㅏ': 523, 'ㅐ': 554, 'ㅑ': 587, 'ㅒ': 622, 'ㅓ': 659,
+  'ㅔ': 698, 'ㅕ': 740, 'ㅖ': 784, 'ㅗ': 831, 'ㅛ': 880,
+  'ㅜ': 932, 'ㅠ': 988, 'ㅡ': 1047, 'ㅣ': 1109,
+  'ㅘ': 831, 'ㅙ': 854, 'ㅚ': 880, 'ㅝ': 932,
+  'ㅞ': 955, 'ㅟ': 988, 'ㅢ': 1047,
+};
+// 영문 26자: A=220Hz부터 반음씩
+const EN_SOUND = {};
+'abcdefghijklmnopqrstuvwxyz'.split('').forEach((ch, i) => {
+  EN_SOUND[ch] = Math.round(220 * Math.pow(2, i / 12));
+});
+let audioCtx = null;
+let audioBrailleOn = true; // 청각 점자 활성화
+let _lastBrailleComposed = ''; // 이전 점자 합성 결과 (변경분만 재생용)
+
+function getAudioCtx() {
+  if (!audioCtx) audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+  if (audioCtx.state === 'suspended') audioCtx.resume();
+  return audioCtx;
+}
+
+// 점자 유니코드 한 글자 → [1,0,1,1,0,1] 6비트 배열
+function brailleToDotsArray(brailleChar) {
+  const code = brailleChar.charCodeAt(0) - 0x2800;
+  if (code < 0 || code > 255) return null;
+  // 점자 유니코드 비트: bit0=dot1, bit1=dot2, bit2=dot3, bit3=dot4, bit4=dot5, bit5=dot6
+  return [
+    (code >> 0) & 1, // dot 1
+    (code >> 1) & 1, // dot 2
+    (code >> 2) & 1, // dot 3
+    (code >> 3) & 1, // dot 4
+    (code >> 4) & 1, // dot 5
+    (code >> 5) & 1, // dot 6
+  ];
+}
+
+// 6점 배열 → 화음 재생 (활성 점만 동시에 울림)
+function playBrailleChord(dots, duration = 0.25) {
+  if (!audioBrailleOn) return;
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+
+  const masterGain = ctx.createGain();
+  masterGain.gain.setValueAtTime(0.15, now);
+  masterGain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+  masterGain.connect(ctx.destination);
+
+  let activeDots = 0;
+  dots.forEach((on, i) => {
+    if (!on) return;
+    activeDots++;
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(BRAILLE_DOT_FREQ[i], now);
+    const dotGain = ctx.createGain();
+    dotGain.gain.setValueAtTime(0.3, now);
+    osc.connect(dotGain);
+    dotGain.connect(masterGain);
+    osc.start(now);
+    osc.stop(now + duration);
+  });
+
+  // 빈 셀이면 짧은 틱 소리
+  if (activeDots === 0) {
+    const osc = ctx.createOscillator();
+    osc.type = 'sine';
+    osc.frequency.setValueAtTime(100, now);
+    const g = ctx.createGain();
+    g.gain.setValueAtTime(0.05, now);
+    g.gain.exponentialRampToValueAtTime(0.001, now + 0.05);
+    osc.connect(g);
+    g.connect(ctx.destination);
+    osc.start(now);
+    osc.stop(now + 0.05);
+  }
+}
+
+// 6점 배열 → 진동 패턴 (활성 점=진동, 비활성=무음)
+function vibrateBrailleDots(dots) {
+  if (!vibrationOn || !navigator.vibrate) return;
+  const pattern = [];
+  dots.forEach((on, i) => {
+    if (i > 0) pattern.push(30); // 점 사이 간격
+    pattern.push(on ? 60 : 0);  // 점 있으면 60ms 진동, 없으면 0
+  });
+  navigator.vibrate(pattern);
+}
+
+// 점자 문자열 전체를 순차 재생 (글자마다 화음 + 진동)
+function playBrailleSequence(brailleText) {
+  if (!brailleText) return;
+  let delay = 0;
+  for (const ch of brailleText) {
+    const dots = brailleToDotsArray(ch);
+    if (!dots) continue;
+    setTimeout(() => {
+      playBrailleChord(dots, 0.2);
+      vibrateBrailleDots(dots);
+    }, delay);
+    delay += 300; // 글자 간격 300ms
+  }
+}
+
+// 점자 한 글자 입력 시 즉시 재생 (키 입력 시 호출)
+function playBrailleChar(brailleChar) {
+  const dots = brailleToDotsArray(brailleChar);
+  if (!dots) return;
+  playBrailleChord(dots, 0.2);
+  vibrateBrailleDots(dots);
+}
+
+// ★ 자모별 고유 음 재생 — 피아노처럼 한 음씩
+function playJamoSound(jamo, duration = 0.3) {
+  if (!audioBrailleOn) return;
+  let freq = CHO_SOUND[jamo] || JUNG_SOUND[jamo] || EN_SOUND[jamo.toLowerCase()];
+  if (!freq) return;
+
+  const ctx = getAudioCtx();
+  const now = ctx.currentTime;
+
+  // 자음 = 사각파(거친 소리), 모음 = 사인파(맑은 소리)
+  const isVowel = !!JUNG_SOUND[jamo];
+  const osc = ctx.createOscillator();
+  osc.type = isVowel ? 'sine' : 'triangle';
+  osc.frequency.setValueAtTime(freq, now);
+
+  const gain = ctx.createGain();
+  gain.gain.setValueAtTime(0.2, now);
+  gain.gain.exponentialRampToValueAtTime(0.001, now + duration);
+
+  osc.connect(gain);
+  gain.connect(ctx.destination);
+  osc.start(now);
+  osc.stop(now + duration);
+}
+
+// 현재 점자 출력 전체를 소리로 재생
+function playCurrentBraille() {
+  const display = document.getElementById('input-display');
+  if (!display) return;
+  const text = display.textContent;
+  if (!text || text === '_') return;
+  playBrailleSequence(text);
+}
+
+// 청각 점자 ON/OFF 토글
+function toggleAudioBraille() {
+  audioBrailleOn = !audioBrailleOn;
+  const btn = document.getElementById('btn-audio-toggle');
+  if (btn) {
+    btn.textContent = audioBrailleOn ? '🔊 청각점자 ON' : '🔇 청각점자 OFF';
+    btn.style.borderColor = audioBrailleOn ? '#F0C040' : '#555';
+    btn.style.color = audioBrailleOn ? '#F0C040' : '#555';
+  }
+}
+
+// 점자 6점 시각화 업데이트
+function updateBrailleDotsVisual(brailleText) {
+  const container = document.getElementById('braille-dots-visual');
+  if (!container) return;
+  container.innerHTML = '';
+  if (!brailleText) return;
+
+  for (const ch of brailleText) {
+    const dots = brailleToDotsArray(ch);
+    if (!dots) continue;
+    if (dots.every(d => d === 0)) continue; // 빈 셀 스킵
+
+    const cell = document.createElement('div');
+    cell.style.cssText = 'display:grid;grid-template-columns:12px 12px;grid-template-rows:12px 12px 12px;gap:4px;padding:4px;background:rgba(240,192,64,0.05);border-radius:6px;border:1px solid rgba(240,192,64,0.15);';
+
+    // 점자 배치: col1=[1,2,3] col2=[4,5,6]
+    const order = [0,3,1,4,2,5]; // dot1,dot4,dot2,dot5,dot3,dot6
+    order.forEach(idx => {
+      const dot = document.createElement('div');
+      dot.style.cssText = `width:12px;height:12px;border-radius:50%;${
+        dots[idx]
+          ? 'background:#F0C040;box-shadow:0 0 4px rgba(240,192,64,0.5);'
+          : 'background:rgba(240,192,64,0.1);'
+      }`;
+      cell.appendChild(dot);
+    });
+    container.appendChild(cell);
+  }
+}
+
+// ═══ TTS 점자 읽기 시스템 ═══
+let autoSpeakOn = false;
+let _lastSpokenText = '';
+
+// 현재 점자 원본 텍스트를 TTS로 읽어주기
+function speakBrailleText() {
+  const brOut = document.getElementById('braille-output');
+  if (!brOut || !brOut.textContent) return;
+  const text = brOut.textContent.trim();
+  if (!text) return;
+
+  speechSynthesis.cancel();
+
+  const lang = brailleSubLang === 'en' ? 'en-US' : 'ko-KR';
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.lang = lang;
+  utter.rate = 0.85;
+  utter.pitch = 1.0;
+
+  const voices = speechSynthesis.getVoices();
+  const targetVoice = voices.find(v => v.lang.startsWith(lang.substring(0,2)));
+  if (targetVoice) utter.voice = targetVoice;
+
+  speechSynthesis.speak(utter);
+}
+
+// 자동읽기: 글자가 완성될 때마다 TTS로 읽어줌
+function autoSpeakNewChar() {
+  if (!autoSpeakOn) return;
+  const brOut = document.getElementById('braille-output');
+  if (!brOut) return;
+  const text = brOut.textContent.trim();
+  if (!text || text === _lastSpokenText) return;
+
+  // 새로 추가된 글자만 읽기
+  let newChar = '';
+  if (_lastSpokenText && text.startsWith(_lastSpokenText)) {
+    newChar = text.slice(_lastSpokenText.length);
+  } else if (text.length > 0) {
+    newChar = text.slice(-1);
+  }
+
+  _lastSpokenText = text;
+  if (!newChar || newChar === ' ') return;
+
+  // 한 글자씩 읽기
+  speechSynthesis.cancel();
+  const lang = brailleSubLang === 'en' ? 'en-US' : 'ko-KR';
+  const utter = new SpeechSynthesisUtterance(newChar);
+  utter.lang = lang;
+  utter.rate = 1.0;
+  utter.pitch = 1.1;
+
+  const voices = speechSynthesis.getVoices();
+  const targetVoice = voices.find(v => v.lang.startsWith(lang.substring(0,2)));
+  if (targetVoice) utter.voice = targetVoice;
+
+  speechSynthesis.speak(utter);
+}
+
+// 자동읽기 토글
+function toggleAutoSpeak() {
+  autoSpeakOn = !autoSpeakOn;
+  const btn = document.getElementById('btn-auto-speak');
+  if (btn) {
+    btn.textContent = autoSpeakOn ? '🗣 자동읽기 ON' : '🗣 자동읽기 OFF';
+    btn.style.borderColor = autoSpeakOn ? '#E040A0' : '#555';
+    btn.style.color = autoSpeakOn ? '#E040A0' : '#888';
+    btn.style.background = autoSpeakOn ? '#2A0820' : '#1A1A28';
+  }
+  _lastSpokenText = '';
+}
+
+// AudioContext 초기화 — 첫 클릭/터치 시 활성화 (브라우저 정책)
+document.addEventListener('click', function initAudio() {
+  getAudioCtx();
+  document.removeEventListener('click', initAudio);
+}, { once: true });
 
 // ═══ 초기화 ═══
 buildKeyboard();
